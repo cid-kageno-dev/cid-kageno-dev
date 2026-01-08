@@ -103,40 +103,59 @@
     </svg>
   </div>
 
-  <div id="chat-modal" class="fixed inset-0 z-[999] hidden bg-black/60 backdrop-blur-sm transition-opacity duration-300">
-    <div class="absolute inset-0" onclick="closeChat()"></div>
-    
-    <div class="absolute bottom-0 right-0 w-full sm:w-[400px] h-[85vh] sm:h-[600px] sm:bottom-6 sm:right-6 bg-transparent overflow-hidden rounded-t-2xl sm:rounded-2xl shadow-2xl animate-fadeUp">
+  <div id="chat-modal" class="fixed inset-0 z-[9999] hidden bg-black transition-transform duration-300 translate-y-full">
+    <div class="w-full h-full bg-[#050507]">
       <iframe 
         id="chat-frame"
         src="" 
         data-src="chat/index.html"
-        class="w-full h-full border-0 block bg-[#050507]"
+        class="w-full h-full border-0 block"
       ></iframe>
     </div>
   </div>
 
   <script>
-    // --- Chat Logic ---
+    // --- Full Screen Chat Logic ---
     const chatBubble = document.getElementById('chat-bubble');
     const chatModal = document.getElementById('chat-modal');
     const chatFrame = document.getElementById('chat-frame');
 
     function openChat() {
-        // Lazy load the iframe source only when clicked
+        // 1. Load the iframe source if it hasn't been loaded yet
         if (chatFrame.getAttribute('src') === "") {
             chatFrame.src = chatFrame.getAttribute('data-src');
         }
+
+        // 2. Remove hidden class to make it renderable
         chatModal.classList.remove('hidden');
+
+        // 3. Small delay to allow the DOM to update, then slide it up
+        setTimeout(() => {
+            chatModal.classList.remove('translate-y-full');
+            chatModal.classList.add('translate-y-0');
+        }, 10);
+
+        // 4. Lock background scrolling on the main site
+        document.body.style.overflow = 'hidden';
     }
 
     function closeChat() {
-        chatModal.classList.add('hidden');
+        // 1. Slide it down
+        chatModal.classList.remove('translate-y-0');
+        chatModal.classList.add('translate-y-full');
+
+        // 2. Unlock background scrolling
+        document.body.style.overflow = 'auto';
+
+        // 3. Wait for animation (300ms) then hide the element
+        setTimeout(() => {
+            chatModal.classList.add('hidden');
+        }, 300);
     }
 
     chatBubble.onclick = openChat;
 
-    // Listen for 'close-chat' message from the iframe
+    // Listen for 'close-chat' message from the iframe (Back button in chat/index.html)
     window.addEventListener('message', (event) => {
         if (event.data === 'close-chat') {
             closeChat();
@@ -153,7 +172,6 @@
         grid.innerHTML = "";
         
         if(Array.isArray(repos)) {
-            // Filter out forks and grab top 6
             const validRepos = repos.filter(r => !r.fork).slice(0, 6);
             
             if (validRepos.length === 0) {
