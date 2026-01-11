@@ -1,0 +1,184 @@
+/* ===============================
+   VARS (Default = Dark Mode)
+   =============================== */
+:root {
+  --bg-dark: #050507;
+  --glass-panel: rgba(20, 20, 25, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  
+  /* DARK MODE TEXT COLOR -> WHITE */
+  --text-primary: #ffffff; 
+  --text-secondary: #9496a1;
+  
+  --accent-primary: #5865F2;
+  --accent-gradient: linear-gradient(135deg, #5865F2, #4752C4);
+  --bot-bubble: rgba(255, 255, 255, 0.08);
+  --online: #23a559;
+  --offline: #fa4a4a;
+  --header-height: 60px;
+}
+
+/* ===============================
+   GLOBAL RESET
+   =============================== */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
+html, body {
+  margin: 0; padding: 0;
+  width: 100%; height: 100%;
+  background: var(--bg-dark);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-primary); /* Uses the variable set above */
+  position: fixed; 
+  inset: 0; 
+  overflow: hidden;
+}
+
+/* ===============================
+   APP LAYOUT
+   =============================== */
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%; 
+  max-width: 500px;
+  margin: 0 auto;
+  background: var(--glass-panel);
+  position: relative;
+}
+
+/* ===============================
+   HEADER
+   =============================== */
+header {
+  flex: 0 0 auto;
+  height: var(--header-height);
+  padding: 0 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(15, 15, 25, 0.95);
+  z-index: 100;
+}
+
+.profile-group { display: flex; align-items: center; gap: 12px; flex: 1; }
+.back-btn { background: none; border: none; color: white; padding: 8px; margin-left: -8px; cursor: pointer; }
+.avatar-wrapper { display: flex; align-items: center; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.1); object-fit: cover; }
+.info h1 { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 4px; }
+.verified-badge { width: 15px; height: 15px; }
+.status { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+.status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary); transition: 0.3s; }
+.active .status::before { background: var(--online); box-shadow: 0 0 8px var(--online); }
+.active .status { color: var(--online); }
+
+/* ===============================
+   CHAT BOX
+   =============================== */
+#chat-box {
+  flex: 1 1 auto; 
+  overflow-y: auto; 
+  padding: 20px 16px;
+  display: flex; flex-direction: column; gap: 16px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+#chat-box::-webkit-scrollbar { width: 4px; }
+#chat-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+.msg { max-width: 85%; padding: 10px 16px; font-size: 15px; border-radius: 20px; line-height: 1.5; word-wrap: break-word; animation: pop 0.2s ease-out; }
+@keyframes pop { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.bot { align-self: flex-start; background: var(--bot-bubble); color: inherit; border: 1px solid var(--glass-border); border-bottom-left-radius: 4px; }
+.user { align-self: flex-end; background: var(--accent-gradient); color: white; border-bottom-right-radius: 4px; }
+
+.typing-indicator { padding: 12px 16px; display: flex; gap: 4px; width: fit-content; }
+.dot { width: 6px; height: 6px; background: #aaa; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+.dot:nth-child(1) { animation-delay: -0.32s; }
+.dot:nth-child(2) { animation-delay: -0.16s; }
+@keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+/* ===============================
+   INPUT AREA
+   =============================== */
+#input-area {
+  flex: 0 0 auto;
+  background: #0b0b10;
+  border-top: 1px solid var(--glass-border);
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  display: flex; align-items: flex-end; gap: 10px;
+  z-index: 100;
+}
+
+textarea {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px;
+  padding: 10px 16px; 
+  font-size: 16px;
+  
+  /* DARK MODE INPUT TEXT -> WHITE */
+  color: white; 
+  
+  resize: none;
+  height: 42px; 
+  max-height: 120px;
+  overflow-y: hidden;
+  font-family: inherit;
+}
+
+textarea:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(88, 101, 242, 0.6); }
+
+#send-btn {
+  width: 42px; height: 42px; flex-shrink: 0;
+  border-radius: 50%; border: none; background: var(--accent-gradient); color: white;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+#send-btn:disabled { opacity: 0.5; background: #333; }
+#send-btn svg { width: 20px; height: 20px; fill: white; margin-left: 2px; }
+
+/* ===============================
+   LIGHT MODE SUPPORT (Follows System)
+   =============================== */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-dark: #ffffff;
+    --glass-panel: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(0, 0, 0, 0.1);
+
+    /* LIGHT MODE TEXT COLOR -> BLACK */
+    --text-primary: #000000;
+    --text-secondary: #666666;
+
+    --bot-bubble: #f0f0f5; 
+  }
+
+  header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  /* Back Button turns Black in Light Mode */
+  .back-btn { color: #000; }
+
+  #input-area {
+    background: #ffffff;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  textarea {
+    background: #f0f0f5;
+    
+    /* INPUT TEXT TURNS BLACK IN LIGHT MODE */
+    color: #000000;
+    
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  textarea:focus {
+    background: #ffffff;
+    border-color: var(--accent-primary);
+  }
+}
