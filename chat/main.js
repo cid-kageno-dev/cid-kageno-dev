@@ -1,5 +1,5 @@
 /* ====================================
-   COMPONENTS (Defined internally to prevent import errors)
+   COMPONENTS
    ==================================== */
 function renderNavbar() {
     return `
@@ -12,7 +12,7 @@ function renderNavbar() {
                 <img src="https://i.postimg.cc/PrNFhBn3/Ani.jpg" alt="Ani" class="avatar">
             </div>
             <div class="info">
-                <h1>A N I <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg" class="verified-badge"></h1>
+                <h1>A N I︵<img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg" class="verified-badge"></h1>
                 <div class="status" id="status-text">Connecting...</div>
             </div>
         </div>
@@ -35,7 +35,7 @@ function renderFooter() {
    MAIN LOGIC
    ==================================== */
 
-// 1. Render Components Immediately
+// 1. Render Components
 document.getElementById('navbar-container').innerHTML = renderNavbar();
 document.getElementById('footer-container').innerHTML = renderFooter();
 
@@ -49,6 +49,7 @@ const statusText = document.getElementById("status-text");
 const backBtn = document.getElementById("back-btn");
 
 // 3. Configuration
+// Note: If running locally, you might need to change this to 'http://127.0.0.1:5000/chat'
 const API_URL = "https://hybrid-ani.onrender.com/chat";
 const BASE_URL = "https://hybrid-ani.onrender.com/"; 
 
@@ -86,10 +87,33 @@ input.addEventListener('input', () => {
   sendBtn.disabled = input.value.trim().length === 0;
 });
 
+// --- UPDATED MESSAGE FUNCTION WITH MARKDOWN PARSER ---
 function addMessage(text, type) {
   const div = document.createElement("div");
   div.className = `msg ${type}`;
-  div.textContent = text;
+
+  if (type === 'bot') {
+      // 1. PARSE LINKS: [Text](URL) -> <a ...>Text</a>
+      let formatted = text.replace(
+          /\[(.*?)\]\((.*?)\)/g, 
+          '<a href="$2" target="_blank" class="clean-link">$1</a>'
+      );
+      
+      // 2. PARSE BOLD: **Text** -> <b>Text</b>
+      formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+      
+      // 3. PARSE NEWLINES -> <br>
+      formatted = formatted.replace(/\n/g, '<br>');
+      
+      // 4. PARSE BULLETS: * Item -> • Item
+      formatted = formatted.replace(/^\* /gm, '• ');
+
+      div.innerHTML = formatted;
+  } else {
+      // User messages remain plain text for security
+      div.textContent = text;
+  }
+
   chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -125,6 +149,7 @@ async function sendMessage() {
     if (!res.ok) throw new Error("API Error");
     const data = await res.json();
     loader.remove();
+    // Use data.response or data.reply depending on your backend
     addMessage(data.reply || data.response, "bot");
     setStatus(true);
   } catch (err) {
@@ -165,7 +190,7 @@ if(backBtn) {
 }
 
 /* ====================================
-   KEYBOARD FOCUS FIX (NEW)
+   KEYBOARD FOCUS FIX
    ==================================== */
 input.addEventListener('focus', () => {
   setTimeout(() => {
