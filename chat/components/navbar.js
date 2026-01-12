@@ -9,7 +9,7 @@ export function renderNavbar() {
                 <img src="https://i.postimg.cc/PrNFhBn3/Ani.jpg" alt="Ani" class="avatar">
             </div>
             <div class="info">
-                <h1>A N I <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg" class="verified-badge"></h1>
+                <h1>A N I︵<img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg" class="verified-badge"></h1>
                 <div class="status" id="status-text">Connecting...</div>
             </div>
         </div>
