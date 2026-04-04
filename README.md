@@ -33,15 +33,23 @@ Git • GitHub • Vercel • Render • Cloudflare
 ---
 
 ## 📊 GitHub Stats
-![](https://github-readme-stats.vercel.app/api?username=cid-kageno-dev&theme=dark&hide_border=false)
-![](https://nirzak-streak-stats.vercel.app/?user=cid-kageno-dev&theme=dark&hide_border=false)
-![](https://github-readme-stats.vercel.app/api/top-langs/?username=cid-kageno-dev&theme=dark&layout=compact)
+
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=cid-kageno-dev&theme=tokyonight&hide_border=true&show_icons=true" />
+  <img src="https://nirzak-streak-stats.vercel.app/?user=cid-kageno-dev&theme=tokyonight&hide_border=true" />
+</p>
+
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=cid-kageno-dev&theme=tokyonight&layout=compact&hide_border=true" />
+</p>
 
 ---
 
 ## 🏆 GitHub Trophies
-![](https://github-profile-trophy.vercel.app/?username=cid-kageno-dev&theme=radical&no-bg=true)
 
+<p align="center">
+  <img src="https://github-profile-trophy.vercel.app/?username=cid-kageno-dev&theme=radical&no-bg=true&no-frame=true&margin-w=10" />
+</p> 
 > “Power is not something you show off. Real power is hidden.” — **Cid Kageno**
 
 ---
