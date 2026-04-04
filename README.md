@@ -47,3 +47,10 @@ Git • GitHub • Vercel • Render • Cloudflare
 ---
 
 ![](https://visitcount.itsvg.in/api?id=cid-kageno-dev&icon=0&color=0)
+
+# My GitHub Profile
+
+Welcome!  
+
+Days since start:  
+![12-31-2025](https://img.shields.io/badge/Days%20since%20start-0-brightgreen)
