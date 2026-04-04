@@ -51,4 +51,4 @@ Git • GitHub • Vercel • Render • Cloudflare
 
 
 Days since start:  
-![12-31-2025](https://img.shields.io/badge/Days%20since%29start-9-brightgreen)
+![12-31-2025](https://img.shields.io/badge/Days%20since%20start-9-brightgreen)
