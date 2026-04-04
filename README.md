@@ -32,24 +32,16 @@ Git • GitHub • Vercel • Render • Cloudflare
 
 ---
 
-## 📊 GitHub Stats
+## 📊 Activity & Metrics
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=cid-kageno-dev&theme=tokyonight&hide_border=true&show_icons=true" />
-  <img src="https://nirzak-streak-stats.vercel.app/?user=cid-kageno-dev&theme=tokyonight&hide_border=true" />
+  <img src="https://github-readme-stats.vercel.app/api?username=cid-kageno-dev&show_icons=true&theme=tokyonight&hide_border=true" />
+  <img src="https://streak-stats.demolab.com?user=cid-kageno-dev&theme=tokyonight&hide_border=true" />
 </p>
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=cid-kageno-dev&theme=tokyonight&layout=compact&hide_border=true" />
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=cid-kageno-dev&layout=compact&theme=tokyonight&hide_border=true" />
 </p>
-
----
-
-## 🏆 GitHub Trophies
-
-<p align="center">
-  <img src="https://github-profile-trophy.vercel.app/?username=cid-kageno-dev&theme=radical&no-bg=true&no-frame=true&margin-w=10" />
-</p> 
 > “Power is not something you show off. Real power is hidden.” — **Cid Kageno**
 
 ---
