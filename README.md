@@ -14,22 +14,21 @@
 
 ---
 
-💻 Tech Stack
-
-"HTML5" (https://img.shields.io/badge/html5-%23E34F26.svg?style=flat&logo=html5&logoColor=white)
-"JavaScript" (https://img.shields.io/badge/javascript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E)
-"TypeScript" (https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white)
-"Python" (https://img.shields.io/badge/python-3776AB?style=flat&logo=python&logoColor=white)
-"Flask" (https://img.shields.io/badge/flask-000000?style=flat&logo=flask)
-"FastAPI" (https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)
-"NodeJS" (https://img.shields.io/badge/node.js-6DA55F?style=flat&logo=node.js&logoColor=white)
-"React" (https://img.shields.io/badge/react-%2320232a.svg?style=flat&logo=react&logoColor=%2361DAFB)
-"Next JS" (https://img.shields.io/badge/Next-black?style=flat&logo=next.js)
-"Firebase" (https://img.shields.io/badge/firebase-%23039BE5.svg?style=flat&logo=firebase)
-"Google Cloud" (https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=flat&logo=google-cloud&logoColor=white)
-"Redis" (https://img.shields.io/badge/redis-%23DD0031.svg?style=flat&logo=redis&logoColor=white)
-"Git" (https://img.shields.io/badge/git-%23F05033.svg?style=flat&logo=git&logoColor=white)
-"GitHub" (https://img.shields.io/badge/github-%23121011.svg?style=flat&logo=github&logoColor=white)
+ 💻 Tech Stack
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat&logo=html5&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white)
+![Python](https://img.shields.io/badge/python-3776AB?style=flat&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/flask-000000?style=flat&logo=flask)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=flat&logo=node.js&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=flat&logo=react&logoColor=%2361DAFB)
+![Next JS](https://img.shields.io/badge/Next-black?style=flat&logo=next.js)
+![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=flat&logo=firebase)
+![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=flat&logo=google-cloud&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=flat&logo=redis&logoColor=white)
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=flat&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=flat&logo=github&logoColor=white)
 
 ---
 
