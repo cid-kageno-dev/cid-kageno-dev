@@ -1,6 +1,6 @@
 # 👋 Hi, I’m Cid Kageno
 
-- 🔭 Working on **Web Development**
+- 🔭 Working on **Self Development**
 - 🌱 Learning **AI & Automation**
 - 👯 Collaborating on **AI-powered projects**
 - 🤔 Building a **personal AI assistant**
