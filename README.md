@@ -85,8 +85,8 @@
 
 ⚡ Random quotes
 
-«“Power is not something you show off. Real power is hidden.”» ## Cid Kageno
+«“Power is not something you show off. Real power is hidden.”» 
 
 ---
 
-https://visitcount.itsvg.in/api?id=cid-kageno-dev&icon=0&color=0
+![](https://visitcount.itsvg.in/api?id=cid-kageno-dev&icon=0&color=0)
