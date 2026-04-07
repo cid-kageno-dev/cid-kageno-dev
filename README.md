@@ -14,7 +14,7 @@
 
 ---
 
- 💻 Tech Stack
+## 💻 Tech Stack
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat&logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white)
@@ -35,8 +35,6 @@
 🚀 Featured Projects
 
 🔹 AI Assistant Backend
-
-"🔗 View Repo" (https://github.com/cid-kageno-dev/Luna-girlfriend)
 
 - Hybrid AI engine (OpenAI + fallback system)
 - Modular, scalable backend architecture
