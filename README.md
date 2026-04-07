@@ -1,10 +1,10 @@
-👤 Cid Kageno
+## 👤 Cid Kageno
 
 🚀 Full Stack Developer | AI Systems Builder
 
 ---
 
-🧠 About Me
+## 🧠 About Me
 
 - 🔭 Building AI-driven backend systems & automation tools
 - ⚙️ Developing production-grade APIs and services
@@ -32,7 +32,7 @@
 
 ---
 
-🚀 Featured Projects
+## 🚀 Featured Projects
 
 🔹 AI Assistant Backend
 
@@ -58,16 +58,18 @@
 
 ---
 
-📊 GitHub Analytics
+## 📊 GitHub Analytics
 
 <p align="center">
   <img src="https://github-readme-stats.vercel.app/api?username=cid-kageno-dev&show_icons=true&theme=tokyonight&hide_border=true" height="150"/>
   <img src="https://streak-stats.demolab.com?user=cid-kageno-dev&theme=tokyonight&hide_border=true" height="150"/>
 </p><p align="center">
   <img src="https://github-readme-activity-graph.vercel.app/graph?username=cid-kageno-dev&theme=tokyo-night&hide_border=true"/>
-</p>---
+</p>
 
-⚙️ Engineering Focus
+---
+
+## ⚙️ Engineering Focus
 
 - ⚡ Scalable backend systems
 - 🤖 AI integration in production
@@ -75,7 +77,7 @@
 
 ---
 
-🌐 Connect
+## 🌐 Connect
 
 <p align="left">
   <a href="https://github.com/cid-kageno-dev" target="_blank">
@@ -85,9 +87,11 @@
   </a>  <a href="mailto:cidkageno105@email.com">
     <img src="https://img.shields.io/badge/Email-D14836?style=flat&logo=gmail&logoColor=white"/>
   </a>
-</p>---
+</p>
 
-⚡ Random quotes
+---
+
+##⚡ Random quotes
 
 «“Power is not something you show off. Real power is hidden.”» 
 
