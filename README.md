@@ -91,7 +91,7 @@
 
 ---
 
-##⚡ Random quotes
+⚡ Random quotes
 
 «“Power is not something you show off. Real power is hidden.”» 
 
