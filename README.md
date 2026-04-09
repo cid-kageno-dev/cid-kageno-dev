@@ -42,7 +42,7 @@
 
 ---
 
-🔹 Luna Chatbot System
+🔹 Virtual Girlfriendn bot
 
 - Persistent memory with database
 - Context-aware conversations
