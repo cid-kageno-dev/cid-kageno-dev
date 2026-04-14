@@ -369,6 +369,7 @@ section {
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 12px 24px;
   border-radius: 12px;
@@ -381,6 +382,7 @@ section {
   position: relative;
   overflow: hidden;
   white-space: nowrap;
+  line-height: 1;
 }
 
 .btn::before {
@@ -419,9 +421,22 @@ section {
 }
 
 .btn-sm {
-  padding: 7px 16px;
+  padding: 8px 16px;
   font-size: 13px;
   border-radius: 9px;
+}
+
+/* Hero buttons — all same height and balanced padding */
+.hero-btn {
+  min-width: 140px;
+  height: 46px;
+  padding: 0 22px;
+}
+
+/* Tool card action button — full width, sits at bottom of card */
+.tool-action-btn {
+  width: 100%;
+  margin-top: 20px;
 }
 
 /* ─── Section Headers ──────────────────────────────── */
@@ -558,6 +573,7 @@ section {
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid var(--border);
+  gap: 12px;
 }
 
 .lang-badge {
@@ -588,8 +604,12 @@ section {
   padding: 28px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
 }
+
+.tool-card .tool-icon-wrap { margin-bottom: 16px; }
+.tool-card .tool-name { margin-bottom: 10px; }
+.tool-card .tool-desc { flex: 1; }
 
 .tool-icon-wrap {
   width: 48px;
@@ -714,6 +734,13 @@ section {
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.contact-links .btn {
+  min-width: 130px;
+  height: 46px;
+  padding: 0 22px;
 }
 
 /* ─── Footer ───────────────────────────────────────── */
