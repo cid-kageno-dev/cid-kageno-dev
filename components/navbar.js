@@ -1,15 +1,27 @@
 class CustomNavbar extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
-      <header class="fixed top-0 left-0 w-full z-50 flex justify-center px-4 pt-5">
-        <nav class="glass-nav py-3 px-6 rounded-2xl shadow-xl backdrop-blur-xl flex gap-6 text-sm font-medium transition-all duration-300">
-          <a href="#home" class="hover:text-[#6c5ce7] hover:scale-105 transition-all">Home</a>
-          <a href="#projects" class="hover:text-[#6c5ce7] hover:scale-105 transition-all">Projects</a>
-          <a href="#tools" class="hover:text-[#6c5ce7] hover:scale-105 transition-all">Tools</a>
-          <a href="#contact" class="hover:text-[#6c5ce7] hover:scale-105 transition-all">Contact</a>
-        </nav>
-      </header>
+      <nav class="site-nav" id="site-nav">
+        <div class="nav-inner" id="nav-inner">
+          <a href="#home" class="nav-link active">Home<span class="nav-dot"></span></a>
+          <a href="#projects" class="nav-link">Projects<span class="nav-dot"></span></a>
+          <a href="#tools" class="nav-link">Tools<span class="nav-dot"></span></a>
+          <a href="#contact" class="nav-link">Contact<span class="nav-dot"></span></a>
+        </div>
+      </nav>
     `;
+
+    window.addEventListener('scroll', () => {
+      const nav = this.querySelector('.site-nav');
+      const inner = this.querySelector('.nav-inner');
+      if (window.scrollY > 40) {
+        nav.classList.add('scrolled');
+        inner.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+        inner.classList.remove('scrolled');
+      }
+    }, { passive: true });
   }
 }
-customElements.define("custom-navbar", CustomNavbar);
+customElements.define('custom-navbar', CustomNavbar);

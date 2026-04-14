@@ -1,208 +1,346 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-  <title>Cid Kageno — Dev Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cid Kageno — Full Stack Developer</title>
 
-  <script>
-    tailwind.config = {
-      darkMode: "media", 
-      theme: { extend: {} }
-    };
-  </script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
 
   <script src="components/navbar.js" defer></script>
   <script src="components/footer.js" defer></script>
 </head>
 
-<body class="transition-colors duration-300 overflow-x-hidden text-black dark:text-white dark:bg-[#0d0d0d]">
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
 
   <custom-navbar></custom-navbar>
 
-  <section id="home" class="container mx-auto px-6 pt-36 pb-24 text-center">
-    <div class="liquid-card p-10 max-w-3xl mx-auto fade-in">
-      <img src="assets/profile.png" 
-     alt="Cid Kageno"
-     class="w-28 h-28 rounded-full mx-auto mb-6 shadow-lg object-cover ring-4 ring-[#6c5ce7]/20">      
-      <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold mb-3 flex items-center justify-center gap-3">
-        <span class="whitespace-nowrap">
-          Cid <span class="opacity-70">Kageno</span>
-        </span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg" 
-             alt="Verified" 
-             class="w-8 h-8 md:w-10 md:h-10 mt-2">
-      </h1>
-      
-      <p class="text-xl opacity-80 mb-6 font-mono text-[#6c5ce7]">Developer • Student</p>
-      
-      <p class="text-base opacity-90 leading-relaxed max-w-xl mx-auto mb-6">
-        Crafting small AI tools and automation systems with a strong emphasis on clean backend architecture and minimal user interfaces.
-      </p>
-      
-      <div class="flex justify-center gap-4 mt-6 flex-wrap">
-        <a href="#projects" class="liquid-btn primary-btn">Explore Work</a>
-        <a href="https://github.com/cid-kageno-dev" target="_blank" class="liquid-btn">GitHub</a>
-        <a href="https://wa.me/+8801731371266" target="_blank" class="liquid-btn">WhatsApp</a>
-      </div>
-    </div>
-  </section>
+  <!-- ── Hero ──────────────────────────────────────── -->
+  <section id="home">
+    <div class="container">
+      <div class="hero-inner">
 
-  <section id="projects" class="container mx-auto px-6 pb-32">
-    <h2 class="text-3xl font-bold text-center mb-12">Projects</h2>
-    <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div class="col-span-full text-center opacity-50 animate-pulse font-mono">
-        Scanning Shadow Garden Archives...
-      </div>
-    </div>
-  </section>
+        <div class="hero-badge reveal">
+          <span class="badge-dot"></span>
+          Available for projects
+        </div>
 
-  <section id="tools" class="container mx-auto px-6 pb-32 text-center">
-    <h2 class="text-3xl font-bold mb-12">Tools</h2>
+        <div class="hero-avatar-wrap reveal reveal-delay-1">
+          <img src="assets/profile.png" alt="Cid Kageno" class="hero-avatar">
+          <div class="avatar-ring"></div>
+        </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-      <div class="liquid-card p-8 text-left hover:scale-[1.02] transition-transform">
-        <h3 class="text-xl font-semibold mb-2 text-[#6c5ce7]">Character AI</h3>
-        <p class="opacity-80 text-sm mb-4">
-          Personality-driven character AI chat system.
+        <h1 class="hero-name reveal reveal-delay-2">
+          Cid Kageno
+          <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"
+               alt="Verified" class="hero-verified">
+        </h1>
+
+        <p class="hero-title reveal reveal-delay-3">
+          <span id="typewriter-text"></span>
+          <span class="typewriter-cursor"></span>
         </p>
-        <a href="c.ai/" class="liquid-btn small-btn text-xs">
-          Open Tool
-        </a>
-      </div>
-      
-      <div class="liquid-card p-8 text-left flex items-center justify-center opacity-50 border-dashed border-2 border-gray-600">
-        <span class="text-sm font-mono">More coming soon...</span>
+
+        <p class="hero-desc reveal reveal-delay-4">
+          Crafting AI tools and automation systems with a strong emphasis on clean backend architecture and minimal, purposeful user interfaces.
+        </p>
+
+        <div class="hero-ctas reveal reveal-delay-5">
+          <a href="#projects" class="btn btn-primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+            View Projects
+          </a>
+          <a href="https://github.com/cid-kageno-dev" target="_blank" class="btn btn-ghost">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            GitHub
+          </a>
+          <a href="https://wa.me/+8801731371266" target="_blank" class="btn btn-ghost">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zm-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+
+        <div class="hero-stats reveal">
+          <div class="stat">
+            <div class="stat-number" id="repo-count">—</div>
+            <div class="stat-label">Repositories</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">AI</div>
+            <div class="stat-label">Focus Area</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Curiosity</div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <section id="contact" class="container mx-auto px-6 pb-32 text-center">
-    <div class="liquid-card p-10 max-w-2xl mx-auto fade-in">
-      <h2 class="text-3xl font-bold mb-4">Contact</h2>
-      <p class="opacity-80 mb-6">
-        Reach out for collaborations or project ideas.
+  <!-- ── Stack Pills ─────────────────────────────────── -->
+  <div class="stack-section">
+    <div class="container">
+      <span class="section-label reveal">Tech Stack</span>
+      <div class="stack-scroll">
+        <span class="stack-pill reveal reveal-delay-1"><span class="stack-pill-icon">🐍</span> Python</span>
+        <span class="stack-pill reveal reveal-delay-2"><span class="stack-pill-icon">⚡</span> FastAPI</span>
+        <span class="stack-pill reveal reveal-delay-3"><span class="stack-pill-icon">🤖</span> AI / ML</span>
+        <span class="stack-pill reveal reveal-delay-4"><span class="stack-pill-icon">🌐</span> JavaScript</span>
+        <span class="stack-pill reveal reveal-delay-5"><span class="stack-pill-icon">🛠️</span> Automation</span>
+        <span class="stack-pill reveal"><span class="stack-pill-icon">🗄️</span> Backend Systems</span>
+        <span class="stack-pill reveal reveal-delay-1"><span class="stack-pill-icon">🐳</span> Docker</span>
+        <span class="stack-pill reveal reveal-delay-2"><span class="stack-pill-icon">🔗</span> REST APIs</span>
+        <span class="stack-pill reveal reveal-delay-3"><span class="stack-pill-icon">💾</span> SQL / NoSQL</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Projects ──────────────────────────────────── -->
+  <section id="projects">
+    <div class="container">
+      <div class="projects-header">
+        <span class="section-label reveal">Work</span>
+        <h2 class="section-title reveal reveal-delay-1">Projects</h2>
+        <p class="section-subtitle reveal reveal-delay-2" style="margin: 12px auto 0;">
+          A selection of public repositories — from AI chatbots to automation scripts.
+        </p>
+      </div>
+      <div class="projects-grid" id="projects-grid">
+        <div class="loading-placeholder">
+          <div class="loading-dots">
+            Scanning repositories <span>.</span><span>.</span><span>.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Tools ─────────────────────────────────────── -->
+  <section id="tools">
+    <div class="container">
+      <span class="section-label reveal">Toolbox</span>
+      <h2 class="section-title reveal reveal-delay-1">Tools</h2>
+      <p class="section-subtitle reveal reveal-delay-2">
+        Interactive tools and mini-applications built as standalone experiences.
       </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="mailto:cidkageno105@gmail.com" class="liquid-btn">Email</a>
-        <a href="https://www.facebook.com/share/17KPLE62qJ/" target="_blank" class="liquid-btn">Facebook</a>
-        <a href="https://wa.me/+8801731371266" target="_blank" class="liquid-btn">WhatsApp</a>
+
+      <div class="tools-grid">
+        <div class="card tool-card reveal reveal-delay-1">
+          <div class="tool-icon-wrap">🎭</div>
+          <div class="tool-name">Ani — Character AI</div>
+          <p class="tool-desc">
+            A personality-driven AI chat system. Engage with a character built on custom logic and real-time inference.
+          </p>
+          <div style="margin-top: auto; padding-top: 16px;">
+            <button onclick="openChat()" class="btn btn-ghost btn-sm" style="cursor:pointer;">
+              Launch Chat
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="card tool-card coming-soon reveal reveal-delay-2" style="pointer-events:none;">
+          <div class="tool-icon-wrap" style="opacity:0.5;">⚙️</div>
+          <div class="tool-name" style="opacity:0.5;">Coming Soon</div>
+          <p class="tool-desc">More tools are being built. Check back later.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Contact ────────────────────────────────────── -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-inner">
+        <div class="contact-card reveal">
+          <span class="section-label" style="justify-content: center; margin-bottom: 16px;">Get in Touch</span>
+          <h2 class="contact-title">Let's Build Together</h2>
+          <p class="contact-sub">
+            Open to collaborations, freelance projects, and interesting conversations.
+          </p>
+          <div class="contact-links">
+            <a href="mailto:cidkageno105@gmail.com" class="btn btn-primary">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              Email Me
+            </a>
+            <a href="https://www.facebook.com/share/17KPLE62qJ/" target="_blank" class="btn btn-ghost">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              Facebook
+            </a>
+            <a href="https://wa.me/+8801731371266" target="_blank" class="btn btn-ghost">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zm-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              WhatsApp
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <custom-footer></custom-footer>
 
-  <div id="chat-bubble" class="fixed bottom-6 right-6 w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-full glass-nav shadow-2xl hover:scale-110 transition-transform cursor-pointer z-40 bg-[#6c5ce7] text-white border border-white/20">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-            d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8-1.31 0-2.547-.26-3.664-.74L3 20l1.74-4.336A7.962 7.962 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+  <!-- ── Chat Bubble ────────────────────────────────── -->
+  <button id="chat-bubble" onclick="openChat()" aria-label="Open chat">
+    <div class="chat-pulse"></div>
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8-1.31 0-2.547-.26-3.664-.74L3 20l1.74-4.336A7.962 7.962 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
     </svg>
-  </div>
+  </button>
 
-  <div id="chat-modal" class="fixed inset-0 z-[9999] hidden bg-black transition-transform duration-300 translate-y-full">
-    <div class="w-full h-full bg-[#050507]">
-      <iframe 
-        id="chat-frame"
-        src="" 
-        data-src="chat/"
-        class="w-full h-full border-0 block"
-      ></iframe>
-    </div>
+  <!-- ── Chat Modal ─────────────────────────────────── -->
+  <div id="chat-modal">
+    <iframe
+      id="chat-frame"
+      src=""
+      data-src="chat/"
+      class="w-full h-full border-0 block"
+      style="width:100%;height:100%;border:none;display:block;"
+    ></iframe>
   </div>
 
   <script>
-    // --- Full Screen Chat Logic ---
-    const chatBubble = document.getElementById('chat-bubble');
+    // ── Chat Logic ──────────────────────────────────────
     const chatModal = document.getElementById('chat-modal');
     const chatFrame = document.getElementById('chat-frame');
 
     function openChat() {
-        // 1. Load the iframe source if it hasn't been loaded yet
-        if (chatFrame.getAttribute('src') === "") {
-            chatFrame.src = chatFrame.getAttribute('data-src');
-        }
-
-        // 2. Remove hidden class to make it renderable
-        chatModal.classList.remove('hidden');
-
-        // 3. Small delay to allow the DOM to update, then slide it up
-        setTimeout(() => {
-            chatModal.classList.remove('translate-y-full');
-            chatModal.classList.add('translate-y-0');
-        }, 10);
-
-        // 4. Lock background scrolling on the main site
-        document.body.style.overflow = 'hidden';
+      if (!chatFrame.getAttribute('src')) {
+        chatFrame.src = chatFrame.getAttribute('data-src');
+      }
+      chatModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
     }
 
     function closeChat() {
-        // 1. Slide it down
-        chatModal.classList.remove('translate-y-0');
-        chatModal.classList.add('translate-y-full');
-
-        // 2. Unlock background scrolling
-        document.body.style.overflow = 'auto';
-
-        // 3. Wait for animation (300ms) then hide the element
-        setTimeout(() => {
-            chatModal.classList.add('hidden');
-        }, 300);
+      chatModal.classList.remove('open');
+      document.body.style.overflow = '';
     }
 
-    chatBubble.onclick = openChat;
-
-    // Listen for 'close-chat' message from the iframe (Back button in chat/index.html)
-    window.addEventListener('message', (event) => {
-        if (event.data === 'close-chat') {
-            closeChat();
-        }
+    window.addEventListener('message', (e) => {
+      if (e.data === 'close-chat') closeChat();
     });
 
-    // --- GitHub API Logic ---
-    const username = "cid-kageno-dev"; 
-    const grid = document.getElementById("projects-grid");
+    // ── Typewriter ──────────────────────────────────────
+    const phrases = [
+      'Full Stack Developer',
+      'AI Systems Builder',
+      'Automation Engineer',
+      'Backend Architect',
+    ];
+    const el = document.getElementById('typewriter-text');
+    let pi = 0, ci = 0, deleting = false;
 
-    fetch(`https://api.github.com/users/${username}/repos?sort=updated`)
+    function type() {
+      const phrase = phrases[pi];
+      el.textContent = deleting ? phrase.slice(0, ci--) : phrase.slice(0, ci++);
+      if (!deleting && ci === phrase.length + 1) {
+        deleting = true;
+        setTimeout(type, 1600);
+        return;
+      }
+      if (deleting && ci < 0) {
+        deleting = false;
+        ci = 0;
+        pi = (pi + 1) % phrases.length;
+      }
+      setTimeout(type, deleting ? 40 : 80);
+    }
+    type();
+
+    // ── Scroll Reveal ───────────────────────────────────
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // ── Navbar Scroll Highlight ─────────────────────────
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function updateActiveLink() {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 120) current = s.id;
+      });
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveLink, { passive: true });
+    updateActiveLink();
+
+    // ── GitHub Repos ────────────────────────────────────
+    const username = 'cid-kageno-dev';
+    const grid = document.getElementById('projects-grid');
+    const repoCountEl = document.getElementById('repo-count');
+
+    const langIcons = {
+      Python: '🐍', JavaScript: '⚡', TypeScript: '🔷', HTML: '🌐',
+      CSS: '🎨', Shell: '🖥️', Go: '🐹', Rust: '🦀', default: '💻'
+    };
+
+    fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=50`)
       .then(r => r.json())
       .then(repos => {
-        grid.innerHTML = "";
-        
-        if(Array.isArray(repos)) {
-            const validRepos = repos.filter(r => !r.fork).slice(0, 6);
-            
-            if (validRepos.length === 0) {
-              grid.innerHTML = `<div class="col-span-full text-center opacity-70">No public projects found yet.</div>`;
-              return;
-            }
-
-            validRepos.forEach(repo => {
-                const card = document.createElement("div");
-                card.className = "liquid-card p-6 flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300";
-                card.innerHTML = `
-                    <div>
-                        <h3 class="text-xl font-bold mb-2 truncate text-[#6c5ce7]">${repo.name}</h3>
-                        <p class="opacity-80 mb-4 text-sm line-clamp-3 leading-relaxed">
-                            ${repo.description || "No description provided."}
-                        </p>
-                    </div>
-                    <div class="flex items-center justify-between mt-2">
-                        <span class="text-xs px-2 py-1 rounded bg-white/10 border border-white/10">${repo.language || 'Code'}</span>
-                        <a href="${repo.html_url}" target="_blank" class="liquid-btn small-btn text-xs">View Code</a>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        } else {
-             grid.innerHTML = `<div class="col-span-full text-center text-red-400">GitHub user not found.</div>`;
+        grid.innerHTML = '';
+        if (!Array.isArray(repos)) {
+          grid.innerHTML = '<p class="loading-placeholder" style="color:#f87171;">GitHub user not found.</p>';
+          return;
         }
+
+        const validRepos = repos.filter(r => !r.fork).slice(0, 6);
+        repoCountEl.textContent = repos.filter(r => !r.fork).length || '—';
+
+        if (validRepos.length === 0) {
+          grid.innerHTML = '<p class="loading-placeholder">No public projects found yet.</p>';
+          return;
+        }
+
+        validRepos.forEach((repo, i) => {
+          const icon = langIcons[repo.language] || langIcons.default;
+          const card = document.createElement('div');
+          card.className = `card project-card reveal reveal-delay-${(i % 3) + 1}`;
+          card.innerHTML = `
+            <div class="project-card-top">
+              <div class="project-icon">${icon}</div>
+              <h3 class="project-name">${repo.name}</h3>
+              <p class="project-desc">${repo.description || 'No description provided.'}</p>
+            </div>
+            <div class="project-footer">
+              <span class="lang-badge">${repo.language || 'Code'}</span>
+              <a href="${repo.html_url}" target="_blank" class="btn btn-ghost btn-sm">
+                View Code
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          `;
+          grid.appendChild(card);
+          // Re-observe new cards
+          observer.observe(card);
+        });
       })
-      .catch(e => {
-          console.error("GitHub Error:", e);
-          grid.innerHTML = `<div class="col-span-full text-center text-red-400">Failed to load projects.</div>`;
+      .catch(() => {
+        grid.innerHTML = '<p class="loading-placeholder" style="color:#f87171;">Failed to load projects.</p>';
       });
   </script>
 
