@@ -33,26 +33,6 @@ function renderFooter() {
 }
 
 /* ====================================
-   USER SLOT HELPER
-   ==================================== */
-
-/**
- * Updates the "Chatting as: [Name]" label in the navbar user slot.
- * Called by the Firebase onAuthChange handler in index.html.
- * @param {string|null} userName  — display name, or null when signed out
- */
-window.updateAniUserSlot = function(userName) {
-  const slot = document.getElementById('ani-user-slot');
-  if (!slot) return;
-  if (!userName) {
-    slot.innerHTML = '';
-    return;
-  }
-  // The full slot HTML (avatar + label) is set by the auth module in index.html.
-  // This function is the hook it calls; the inner HTML is already handled there.
-};
-
-/* ====================================
    CODE BLOCK REGISTRY & TOGGLE
    ==================================== */
 const codeRegistry = {};

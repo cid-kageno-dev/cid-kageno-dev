@@ -155,8 +155,6 @@
         if (user) {
           forceClose();
           const name = user.displayName || user.email.split('@')[0];
-          // Update the "Chatting as" label in the navbar
-          if (typeof window.updateAniUserSlot === 'function') window.updateAniUserSlot(name);
           if (!slot) return;
           const initials = getInitials(user);
           slot.innerHTML = `
@@ -171,7 +169,6 @@
           });
         } else {
           openModal(true);
-          if (typeof window.updateAniUserSlot === 'function') window.updateAniUserSlot(null);
           if (!slot) return;
           slot.innerHTML = '';
         }

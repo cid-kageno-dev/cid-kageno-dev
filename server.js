@@ -39,6 +39,25 @@ function httpsPost(url, data) {
   });
 }
 
+function httpsGet(url, headers = {}) {
+  return new Promise((resolve, reject) => {
+    const parsed  = new URL(url);
+    const options = {
+      hostname: parsed.hostname,
+      path:     parsed.pathname + parsed.search,
+      method:   'GET',
+      headers:  { 'User-Agent': 'portfolio-site', ...headers },
+    };
+    const req = https.request(options, res => {
+      let raw = '';
+      res.on('data', chunk => raw += chunk);
+      res.on('end', () => resolve({ status: res.statusCode, body: raw }));
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
+
 function readBody(req) {
   return new Promise((resolve, reject) => {
     let raw = '';
@@ -50,6 +69,29 @@ function readBody(req) {
 
 const server = http.createServer(async (req, res) => {
   const urlPath = req.url.split('?')[0];
+
+  if (urlPath === '/favicon.ico') {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
+  if (urlPath === '/api/github-repos' && req.method === 'GET') {
+    try {
+      const ghHeaders = {};
+      if (process.env.GITHUB_TOKEN) ghHeaders['Authorization'] = `Bearer ${process.env.GITHUB_TOKEN}`;
+      const ghRes = await httpsGet(
+        'https://api.github.com/users/cid-kageno-dev/repos?sort=updated&per_page=50',
+        ghHeaders
+      );
+      res.writeHead(ghRes.status, { 'Content-Type': 'application/json' });
+      res.end(ghRes.body);
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to fetch repos' }));
+    }
+    return;
+  }
 
   if (urlPath === '/api/chat' && req.method === 'POST') {
     try {

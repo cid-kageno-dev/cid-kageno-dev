@@ -474,7 +474,7 @@
       CSS: '🎨', Shell: '🖥️', Go: '🐹', Rust: '🦀', default: '💻'
     };
 
-    fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=50`)
+    fetch(`/api/github-repos`)
       .then(r => r.json())
       .then(repos => {
         grid.innerHTML = '';
