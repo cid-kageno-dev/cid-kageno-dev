@@ -3,16 +3,6 @@ const https = require('https');
 const fs    = require('fs');
 const path  = require('path');
 
-const FIREBASE_CONFIG_JS = `window.FIREBASE_CONFIG = ${JSON.stringify({
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID
-})};`;
-
 const MIME = {
   html: 'text/html',
   css:  'text/css',
@@ -60,12 +50,6 @@ function readBody(req) {
 
 const server = http.createServer(async (req, res) => {
   const urlPath = req.url.split('?')[0];
-
-  if (urlPath === '/firebase-config.js') {
-    res.writeHead(200, { 'Content-Type': 'text/javascript' });
-    res.end(FIREBASE_CONFIG_JS);
-    return;
-  }
 
   if (urlPath === '/api/chat' && req.method === 'POST') {
     try {
