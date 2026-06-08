@@ -1,12 +1,19 @@
 version: 1
+backend:
+  phases:
+    build:
+      commands:
+        - npm ci
+        - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:
     build:
       commands:
-        - echo "No build step required — static site"
+        - echo "No frontend build step required — static site"
   artifacts:
     baseDirectory: .
     files:
       - '**/*'
   cache:
-    paths: []
+    paths:
+      - node_modules/**/*
