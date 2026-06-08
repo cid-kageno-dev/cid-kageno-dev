@@ -19,6 +19,7 @@
 
   <script src="components/navbar.js" defer></script>
   <script src="components/footer.js" defer></script>
+  <script src="/firebase-config.js"></script>
 </head>
 
 <body>
@@ -212,16 +213,6 @@
 
       <div class="auth-error" id="auth-error"></div>
 
-      <!-- Amplify email verification step (shown only after sign-up) -->
-      <div id="auth-confirm-wrap" style="display:none;">
-        <p class="auth-sub" style="text-align:center;margin-bottom:12px;">We sent a code to your email.</p>
-        <div class="auth-input-wrap">
-          <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <input type="text" id="auth-confirm-code" placeholder="6-digit verification code" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
-        </div>
-        <button class="auth-submit-btn" id="auth-confirm-submit" type="button">Verify &amp; Sign In</button>
-      </div>
-
       <form id="auth-form">
         <div class="auth-name-row" id="auth-name-row">
           <div class="auth-input-wrap">
@@ -267,26 +258,18 @@
     </svg>
   </a>
 
-  <!-- ── Amplify Auth Init ────────────────────────────── -->
+  <!-- ── Firebase Auth Init ───────────────────────────── -->
   <script type="module">
-    import {
-      signInWithGoogle, signInWithGitHub,
-      signInWithEmail, signUpWithEmail,
-      confirmUserSignUp,
-      signOut, onAuthChange,
-    } from '/auth.js';
+    import { signInWithGoogle, signInWithGitHub, signInWithEmail, signUpWithEmail, signOut, onAuthChange } from '/auth.js';
 
-    const overlay      = document.getElementById('auth-overlay');
-    const closeBtn     = document.getElementById('auth-close');
-    const tabSignIn    = document.getElementById('tab-signin');
-    const tabSignUp    = document.getElementById('tab-signup');
-    const authError    = document.getElementById('auth-error');
-    const nameRow      = document.getElementById('auth-name-row');
-    const submitBtn    = document.getElementById('auth-submit');
-    const authWrap     = document.getElementById('nav-auth-wrap');
-    const confirmWrap  = document.getElementById('auth-confirm-wrap');
-    const confirmInput = document.getElementById('auth-confirm-code');
-    const confirmBtn   = document.getElementById('auth-confirm-submit');
+    const overlay   = document.getElementById('auth-overlay');
+    const closeBtn  = document.getElementById('auth-close');
+    const tabSignIn = document.getElementById('tab-signin');
+    const tabSignUp = document.getElementById('tab-signup');
+    const authError = document.getElementById('auth-error');
+    const nameRow   = document.getElementById('auth-name-row');
+    const submitBtn = document.getElementById('auth-submit');
+    const authWrap  = document.getElementById('nav-auth-wrap');
 
     // ── Input check indicators ──────────────────────────
     const emailInput = document.getElementById('auth-email');
@@ -302,8 +285,7 @@
     });
 
     let mode = 'signin';
-    let pendingEmail = '';
-    let pendingPassword = '';
+
     let autoLoginTimer = null;
 
     function showLoginModal() {
@@ -313,7 +295,10 @@
         document.getElementById('auth-email').focus();
       }, 1500);
     }
-    function hideLoginModal() { clearTimeout(autoLoginTimer); }
+
+    function hideLoginModal() {
+      clearTimeout(autoLoginTimer);
+    }
 
     window.openAuthModal = () => {
       overlay.classList.add('open');
@@ -323,29 +308,23 @@
     function closeModal() {
       overlay.classList.remove('open');
       clearError();
-      setMode('signin');
-      pendingEmail = '';
-      pendingPassword = '';
       sessionStorage.setItem('login-dismissed', '1');
     }
     closeBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-    function showError(msg) { authError.textContent = msg; authError.classList.add('visible'); }
-    function clearError()   { authError.classList.remove('visible'); }
+    function showError(msg) {
+      authError.textContent = msg;
+      authError.classList.add('visible');
+    }
+    function clearError() { authError.classList.remove('visible'); }
 
     function setMode(m) {
       mode = m;
       tabSignIn.classList.toggle('active', m === 'signin');
       tabSignUp.classList.toggle('active', m === 'signup');
       nameRow.classList.toggle('visible', m === 'signup');
-      // show/hide confirm section
-      const isConfirm = m === 'confirm';
-      confirmWrap.style.display = isConfirm ? '' : 'none';
-      document.getElementById('auth-form').style.display = isConfirm ? 'none' : '';
-      document.querySelector('.auth-or-text').style.display = isConfirm ? 'none' : '';
-      document.querySelector('.auth-social-icons').style.display = isConfirm ? 'none' : '';
       clearError();
     }
 
@@ -354,20 +333,20 @@
 
     document.getElementById('btn-google').addEventListener('click', async () => {
       clearError();
-      try { await signInWithGoogle(); }
-      catch (e) { showError(e.message); }
+      try { await signInWithGoogle(); closeModal(); }
+      catch (e) { showError(e.message.replace('Firebase: ', '')); }
     });
 
     document.getElementById('btn-github').addEventListener('click', async () => {
       clearError();
-      try { await signInWithGitHub(); }
-      catch (e) { showError(e.message); }
+      try { await signInWithGitHub(); closeModal(); }
+      catch (e) { showError(e.message.replace('Firebase: ', '')); }
     });
 
     document.getElementById('auth-form').addEventListener('submit', async e => {
       e.preventDefault();
-      const email    = emailInput.value.trim();
-      const password = passInput.value;
+      const email    = document.getElementById('auth-email').value.trim();
+      const password = document.getElementById('auth-password').value;
       const name     = document.getElementById('auth-name').value.trim();
       clearError();
       if (!email || !password) { showError('Please enter your email and password.'); return; }
@@ -375,32 +354,15 @@
       try {
         if (mode === 'signin') {
           await signInWithEmail(email, password);
-          closeModal();
         } else {
-          const result = await signUpWithEmail(email, password, name);
-          if (result.nextStep?.signUpStep === 'CONFIRM_SIGN_UP') {
-            pendingEmail    = email;
-            pendingPassword = password;
-            setMode('confirm');
-          } else {
-            closeModal();
-          }
+          await signUpWithEmail(email, password, name);
         }
-      } catch (e) { showError(e.message); }
-      finally     { submitBtn.disabled = false; }
-    });
-
-    // ── Email verification step ─────────────────────────
-    confirmBtn.addEventListener('click', async () => {
-      const code = confirmInput.value.trim();
-      if (!code) { showError('Please enter the verification code.'); return; }
-      confirmBtn.disabled = true;
-      try {
-        await confirmUserSignUp(pendingEmail, code);
-        await signInWithEmail(pendingEmail, pendingPassword);
         closeModal();
-      } catch (e) { showError(e.message); }
-      finally     { confirmBtn.disabled = false; }
+      } catch (e) {
+        showError(e.message.replace('Firebase: ', '').replace(/\(auth\/[\w-]+\)\.?/, '').trim());
+      } finally {
+        submitBtn.disabled = false;
+      }
     });
 
     function getInitials(user) {
@@ -428,7 +390,9 @@
               </button>
             </div>
           </div>`;
-        document.getElementById('nav-user-btn').addEventListener('click', function() { this.classList.toggle('open'); });
+        document.getElementById('nav-user-btn').addEventListener('click', function() {
+          this.classList.toggle('open');
+        });
         document.addEventListener('click', e => {
           const btn = document.getElementById('nav-user-btn');
           if (btn && !btn.contains(e.target)) btn.classList.remove('open');

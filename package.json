@@ -1,13 +1,9 @@
 {
   "name": "portfolio-cid-kageno",
   "scripts": {
-    "start": "node server.js",
-    "sandbox": "npx ampx sandbox",
-    "pipeline-deploy": "npx ampx pipeline-deploy --branch main --app-id YOUR_AMPLIFY_APP_ID"
+    "start": "node server.js"
   },
-  "devDependencies": {
-    "@aws-amplify/backend": "^1.0.0",
-    "@aws-amplify/backend-cli": "^1.0.0",
-    "typescript": "^5.0.0"
+  "dependencies": {
+    "express": "^4.19.2"
   }
 }
