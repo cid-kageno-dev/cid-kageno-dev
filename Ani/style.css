@@ -83,6 +83,24 @@ header {
   padding-left: 10px;
 }
 
+.ani-user-info {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.ani-chatting-as {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.ani-chatting-as strong {
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 600;
+}
+
 .ani-user-avatar {
   width: 30px;
   height: 30px;

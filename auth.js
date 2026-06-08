@@ -41,3 +41,9 @@ export async function signOut() {
 export function onAuthChange(callback) {
   onAuthStateChanged(auth, callback);
 }
+
+export async function getIdToken() {
+  const user = auth.currentUser;
+  if (!user) return null;
+  return user.getIdToken();
+}

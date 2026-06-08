@@ -65,7 +65,10 @@
     <script src="/firebase-config.js"></script>
     <script src="main.js"></script>
     <script type="module">
-      import { signInWithGoogle, signInWithGitHub, signInWithEmail, signUpWithEmail, signOut, onAuthChange } from '/auth.js';
+      import { signInWithGoogle, signInWithGitHub, signInWithEmail, signUpWithEmail, signOut, onAuthChange, getIdToken } from '/auth.js';
+
+      // Expose token getter so main.js can attach it to chat requests
+      window.getAniIdToken = () => getIdToken();
 
       const overlay  = document.getElementById('ani-auth-overlay');
       const closeBtn = document.getElementById('ani-auth-close');
@@ -151,17 +154,24 @@
         const slot = document.getElementById('ani-user-slot');
         if (user) {
           forceClose();
+          const name = user.displayName || user.email.split('@')[0];
+          // Update the "Chatting as" label in the navbar
+          if (typeof window.updateAniUserSlot === 'function') window.updateAniUserSlot(name);
           if (!slot) return;
           const initials = getInitials(user);
-          const name = user.displayName || user.email.split('@')[0];
-          slot.innerHTML = user.photoURL
-            ? `<img src="${user.photoURL}" class="ani-user-avatar" alt="${name}" title="Sign out of ${name}" referrerpolicy="no-referrer">`
-            : `<div class="ani-user-avatar ani-user-initials" title="Sign out of ${name}">${initials}</div>`;
+          slot.innerHTML = `
+            <div class="ani-user-info">
+              ${user.photoURL
+                ? `<img src="${user.photoURL}" class="ani-user-avatar" alt="${name}" title="Sign out of ${name}" referrerpolicy="no-referrer">`
+                : `<div class="ani-user-avatar ani-user-initials" title="Sign out of ${name}">${initials}</div>`}
+              <span class="ani-chatting-as">Chatting as: <strong>${name}</strong></span>
+            </div>`;
           slot.querySelector('.ani-user-avatar').addEventListener('click', async () => {
             if (confirm(`Sign out of ${name}?`)) await signOut();
           });
         } else {
           openModal(true);
+          if (typeof window.updateAniUserSlot === 'function') window.updateAniUserSlot(null);
           if (!slot) return;
           slot.innerHTML = '';
         }

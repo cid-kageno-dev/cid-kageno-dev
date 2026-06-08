@@ -33,6 +33,26 @@ function renderFooter() {
 }
 
 /* ====================================
+   USER SLOT HELPER
+   ==================================== */
+
+/**
+ * Updates the "Chatting as: [Name]" label in the navbar user slot.
+ * Called by the Firebase onAuthChange handler in index.html.
+ * @param {string|null} userName  — display name, or null when signed out
+ */
+window.updateAniUserSlot = function(userName) {
+  const slot = document.getElementById('ani-user-slot');
+  if (!slot) return;
+  if (!userName) {
+    slot.innerHTML = '';
+    return;
+  }
+  // The full slot HTML (avatar + label) is set by the auth module in index.html.
+  // This function is the hook it calls; the inner HTML is already handled there.
+};
+
+/* ====================================
    CODE BLOCK REGISTRY & TOGGLE
    ==================================== */
 const codeRegistry = {};
@@ -131,9 +151,12 @@ const statusText = document.getElementById("status-text");
 const backBtn = document.getElementById("back-btn");
 
 // 3. Configuration
-// Note: If running locally, you might need to change this to 'http://127.0.0.1:5000/api/chat'
-const URL = "https://ani-jms7.onrender.com/api/chat";
-const BURL = "https://ani-jms7.onrender.com/"; 
+// Requests go through the local server proxy (/api/chat) which:
+//   - verifies the Firebase ID token
+//   - extracts the user's name
+//   - forwards to the Ani backend with userName injected
+const URL  = "/api/chat";
+const BURL = "https://ani-jms7.onrender.com/";
 
 /* ====================================
    VIEWPORT & RESIZE LOGIC
@@ -269,10 +292,23 @@ async function sendMessage() {
 
   const loader = showTyping();
 
+  // ── Get the current user's auth token ──────────────────────────────────
+  // Using Firebase Auth (via window.getAniIdToken exposed in index.html).
+  // Swap this line if you change auth providers:
+  //   Clerk:    await window.Clerk.session.getToken()
+  //   Supabase: (await supabase.auth.getSession()).data.session?.access_token
+  let authToken = null;
+  if (typeof window.getAniIdToken === 'function') {
+    try { authToken = await window.getAniIdToken(); } catch (_) {}
+  }
+
+  const headers = { 'Content-Type': 'application/json' };
+  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+
   try {
     const res = await fetch(URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ message: text })
     });
     if (!res.ok) throw new Error("API Error");
