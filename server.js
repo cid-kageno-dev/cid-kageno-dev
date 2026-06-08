@@ -82,10 +82,13 @@ app.post('/api/chat', async (req, res) => {
     const authHeader = req.headers['authorization'] || '';
     const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
-    if (token && process.env.FIREBASE_API_KEY) {
+    // Firebase API key is public by design — same value as in firebase-config.js
+    const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyAxyBAXzN9hiNjr5dx50I9xrrtImVEbD6k';
+
+    if (token) {
       try {
         const verifyRes = await httpsPost(
-          `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.FIREBASE_API_KEY}`,
+          `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${FIREBASE_API_KEY}`,
           { idToken: token }
         );
         if (verifyRes.status === 200) {

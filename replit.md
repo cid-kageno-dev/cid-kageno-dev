@@ -44,12 +44,11 @@ Serves on port 5000. Handles static files, proxies `/api/github-repos` and `/api
 
 ## Deploying to Vercel
 - `vercel.json` is configured — all requests route through `server.js` via `@vercel/node`
-- Set environment variables in Vercel dashboard:
-  - `FIREBASE_API_KEY` — for server-side Firebase token verification
-  - `GITHUB_TOKEN` — (optional) for higher GitHub API rate limits
+- Optionally set in Vercel dashboard:
+  - `GITHUB_TOKEN` — for higher GitHub API rate limits (unauthenticated limit is 60 req/hr)
 
 ## Environment Variables
-- `FIREBASE_API_KEY` — used server-side for Firebase token verification
+- `FIREBASE_API_KEY` — optional override; already hardcoded in server.js (same public key as firebase-config.js)
 - `GITHUB_TOKEN` — (optional) GitHub API token for higher rate limits
 
 ## User Preferences
