@@ -151,11 +151,11 @@ const statusText = document.getElementById("status-text");
 const backBtn = document.getElementById("back-btn");
 
 // 3. Configuration
-// Requests go through the local server proxy (/api/chat) which:
-//   - verifies the Firebase ID token
-//   - extracts the user's name
-//   - forwards to the Ani backend with userName injected
-const URL  = "/api/chat";
+// Chat requests go directly to the Ani backend on Render.
+// The Authorization header carries the Firebase ID token so your Render backend
+// can verify it, extract the user's name, and inject it into Ani's system prompt.
+// See backend setup notes in README.md.
+const URL  = "https://ani-jms7.onrender.com/api/chat";
 const BURL = "https://ani-jms7.onrender.com/";
 
 /* ====================================
