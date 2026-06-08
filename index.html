@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="color-scheme" content="dark light">
+  <script>
+    (function(){
+      var s = localStorage.getItem('theme');
+      var p = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      if ((s || p) === 'light') document.documentElement.setAttribute('data-theme','light');
+    })();
+  </script>
+  <title>Cid Kageno — Full Stack Developer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+
+  <script src="components/navbar.js" defer></script>
+  <script src="components/footer.js" defer></script>
+  <script src="/firebase-config.js"></script>
+</head>
+
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <custom-navbar></custom-navbar>
+
+  <!-- ── Hero ──────────────────────────────────────── -->
+  <section id="home">
+    <div class="container">
+      <div class="hero-inner">
+
+        <div class="hero-badge reveal">
+          <span class="badge-dot"></span>
+          Available for projects
+        </div>
+
+        <div class="hero-avatar-wrap reveal reveal-delay-1">
+          <img src="assets/profile.png" alt="Cid Kageno" class="hero-avatar">
+          <div class="avatar-ring"></div>
+        </div>
+
+        <h1 class="hero-name reveal reveal-delay-2">
+          Cid Kageno
+          <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"
+               alt="Verified" class="hero-verified">
+        </h1>
+
+        <p class="hero-title reveal reveal-delay-3">
+          <span id="typewriter-text"></span>
+          <span class="typewriter-cursor"></span>
+        </p>
+
+        <p class="hero-desc reveal reveal-delay-4">
+          Crafting AI tools and automation systems with a strong emphasis on clean backend architecture and minimal, purposeful user interfaces.
+        </p>
+
+        <div class="hero-ctas reveal reveal-delay-5">
+          <a href="#projects" class="btn btn-primary hero-btn">
+            View Projects
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="https://github.com/cid-kageno-dev" target="_blank" class="btn btn-ghost hero-btn">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            GitHub
+          </a>
+          <a href="https://wa.me/+8801731371266" target="_blank" class="btn btn-ghost hero-btn">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zm-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+
+        <div class="hero-stats reveal">
+          <div class="stat">
+            <div class="stat-number" id="repo-count">—</div>
+            <div class="stat-label">Repositories</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">AI</div>
+            <div class="stat-label">Focus Area</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Curiosity</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stack Pills ─────────────────────────────────── -->
+  <div class="stack-section">
+    <div class="container">
+      <span class="section-label reveal">Tech Stack</span>
+      <div class="stack-scroll">
+        <span class="stack-pill reveal reveal-delay-1"><span class="stack-pill-icon">🐍</span> Python</span>
+        <span class="stack-pill reveal reveal-delay-2"><span class="stack-pill-icon">⚡</span> FastAPI</span>
+        <span class="stack-pill reveal reveal-delay-3"><span class="stack-pill-icon">🤖</span> AI / ML</span>
+        <span class="stack-pill reveal reveal-delay-4"><span class="stack-pill-icon">🌐</span> JavaScript</span>
+        <span class="stack-pill reveal reveal-delay-5"><span class="stack-pill-icon">🛠️</span> Automation</span>
+        <span class="stack-pill reveal"><span class="stack-pill-icon">🗄️</span> Backend Systems</span>
+        <span class="stack-pill reveal reveal-delay-1"><span class="stack-pill-icon">🐳</span> Docker</span>
+        <span class="stack-pill reveal reveal-delay-2"><span class="stack-pill-icon">🔗</span> REST APIs</span>
+        <span class="stack-pill reveal reveal-delay-3"><span class="stack-pill-icon">💾</span> SQL / NoSQL</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Projects ──────────────────────────────────── -->
+  <section id="projects">
+    <div class="container">
+      <div class="projects-header">
+        <span class="section-label reveal">Work</span>
+        <h2 class="section-title reveal reveal-delay-1">Projects</h2>
+        <p class="section-subtitle reveal reveal-delay-2" style="margin: 12px auto 0;">
+          A selection of public repositories — from AI chatbots to automation scripts.
+        </p>
+      </div>
+      <div class="projects-grid" id="projects-grid">
+        <div class="loading-placeholder">
+          <div class="loading-dots">
+            Scanning repositories <span>.</span><span>.</span><span>.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Tools ─────────────────────────────────────── -->
+  <section id="tools">
+    <div class="container">
+      <span class="section-label reveal">Toolbox</span>
+      <h2 class="section-title reveal reveal-delay-1">Tools</h2>
+      <p class="section-subtitle reveal reveal-delay-2">
+        Interactive tools and mini-applications built as standalone experiences.
+      </p>
+
+      <div class="tools-grid">
+        <div class="card tool-card reveal reveal-delay-1">
+          <div class="tool-icon-wrap">🎭</div>
+          <div class="tool-name">Ani — Character AI</div>
+          <p class="tool-desc">
+            A personality-driven AI chat system. Engage with a character built on custom logic and real-time inference.
+          </p>
+          <a href="/Ani/" class="btn btn-ghost btn-sm tool-action-btn">
+            Launch Chat
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <div class="card tool-card coming-soon reveal reveal-delay-2" style="pointer-events:none;">
+          <div class="tool-icon-wrap" style="opacity:0.5;">⚙️</div>
+          <div class="tool-name" style="opacity:0.5;">Coming Soon</div>
+          <p class="tool-desc">More tools are being built. Check back later.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Contact ────────────────────────────────────── -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-inner">
+        <div class="contact-card reveal">
+          <span class="section-label" style="justify-content: center; margin-bottom: 16px;">Get in Touch</span>
+          <h2 class="contact-title">Let's Build Together</h2>
+          <p class="contact-sub">
+            Open to collaborations, freelance projects, and interesting conversations.
+          </p>
+          <div class="contact-links">
+            <a href="mailto:cidkageno105@gmail.com" class="btn btn-primary">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              Email Me
+            </a>
+            <a href="https://www.facebook.com/share/17KPLE62qJ/" target="_blank" class="btn btn-ghost">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              Facebook
+            </a>
+            <a href="https://wa.me/+8801731371266" target="_blank" class="btn btn-ghost">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zm-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <custom-footer></custom-footer>
+
+  <!-- ── Auth Modal ────────────────────────────────── -->
+  <div class="auth-overlay" id="auth-overlay">
+    <div class="auth-modal" role="dialog" aria-modal="true" aria-label="Sign in">
+      <button class="auth-modal-close" id="auth-close" aria-label="Close">✕</button>
+
+      <h2 class="auth-title">Welcome Back</h2>
+      <p class="auth-sub">Hey <strong>buddy</strong>, Please enter your details</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-signin">Sign In</button>
+        <button class="auth-tab" id="tab-signup">Sign Up</button>
+      </div>
+
+      <div class="auth-error" id="auth-error"></div>
+
+      <form id="auth-form">
+        <div class="auth-name-row" id="auth-name-row">
+          <div class="auth-input-wrap">
+            <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="auth-name" placeholder="Full name" autocomplete="name">
+          </div>
+        </div>
+
+        <div class="auth-input-wrap">
+          <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <input type="email" id="auth-email" placeholder="Email address" autocomplete="email">
+          <span class="auth-check" id="email-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="auth-input-wrap">
+          <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <input type="password" id="auth-password" placeholder="Password" autocomplete="current-password">
+          <span class="auth-check" id="pass-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <button class="auth-submit-btn" id="auth-submit" type="submit">Continue</button>
+      </form>
+
+      <p class="auth-or-text">Or continue with</p>
+
+      <div class="auth-social-icons">
+        <button class="auth-icon-btn" id="btn-google" title="Continue with Google">
+          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        </button>
+        <button class="auth-icon-btn" id="btn-github" title="Continue with GitHub">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Chat Bubble ────────────────────────────────── -->
+  <a id="chat-bubble" href="/Ani/" aria-label="Open chat">
+    <div class="chat-pulse"></div>
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8-1.31 0-2.547-.26-3.664-.74L3 20l1.74-4.336A7.962 7.962 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+    </svg>
+  </a>
+
+  <!-- ── Firebase Auth Init ───────────────────────────── -->
+  <script type="module">
+    import { signInWithGoogle, signInWithGitHub, signInWithEmail, signUpWithEmail, signOut, onAuthChange } from '/auth.js';
+
+    const overlay   = document.getElementById('auth-overlay');
+    const closeBtn  = document.getElementById('auth-close');
+    const tabSignIn = document.getElementById('tab-signin');
+    const tabSignUp = document.getElementById('tab-signup');
+    const authError = document.getElementById('auth-error');
+    const nameRow   = document.getElementById('auth-name-row');
+    const submitBtn = document.getElementById('auth-submit');
+    const authWrap  = document.getElementById('nav-auth-wrap');
+
+    // ── Input check indicators ──────────────────────────
+    const emailInput = document.getElementById('auth-email');
+    const passInput  = document.getElementById('auth-password');
+    const emailCheck = document.getElementById('email-check');
+    const passCheck  = document.getElementById('pass-check');
+
+    emailInput.addEventListener('input', () => {
+      emailCheck.classList.toggle('show', emailInput.value.includes('@') && emailInput.value.length > 4);
+    });
+    passInput.addEventListener('input', () => {
+      passCheck.classList.toggle('show', passInput.value.length >= 6);
+    });
+
+    let mode = 'signin';
+
+    let autoLoginTimer = null;
+
+    function showLoginModal() {
+      if (sessionStorage.getItem('login-dismissed')) return;
+      autoLoginTimer = setTimeout(() => {
+        overlay.classList.add('open');
+        document.getElementById('auth-email').focus();
+      }, 1500);
+    }
+
+    function hideLoginModal() {
+      clearTimeout(autoLoginTimer);
+    }
+
+    window.openAuthModal = () => {
+      overlay.classList.add('open');
+      document.getElementById('auth-email').focus();
+    };
+
+    function closeModal() {
+      overlay.classList.remove('open');
+      clearError();
+      sessionStorage.setItem('login-dismissed', '1');
+    }
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    function showError(msg) {
+      authError.textContent = msg;
+      authError.classList.add('visible');
+    }
+    function clearError() { authError.classList.remove('visible'); }
+
+    function setMode(m) {
+      mode = m;
+      tabSignIn.classList.toggle('active', m === 'signin');
+      tabSignUp.classList.toggle('active', m === 'signup');
+      nameRow.classList.toggle('visible', m === 'signup');
+      clearError();
+    }
+
+    tabSignIn.addEventListener('click', () => setMode('signin'));
+    tabSignUp.addEventListener('click', () => setMode('signup'));
+
+    document.getElementById('btn-google').addEventListener('click', async () => {
+      clearError();
+      try { await signInWithGoogle(); closeModal(); }
+      catch (e) { showError(e.message.replace('Firebase: ', '')); }
+    });
+
+    document.getElementById('btn-github').addEventListener('click', async () => {
+      clearError();
+      try { await signInWithGitHub(); closeModal(); }
+      catch (e) { showError(e.message.replace('Firebase: ', '')); }
+    });
+
+    document.getElementById('auth-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email    = document.getElementById('auth-email').value.trim();
+      const password = document.getElementById('auth-password').value;
+      const name     = document.getElementById('auth-name').value.trim();
+      clearError();
+      if (!email || !password) { showError('Please enter your email and password.'); return; }
+      submitBtn.disabled = true;
+      try {
+        if (mode === 'signin') {
+          await signInWithEmail(email, password);
+        } else {
+          await signUpWithEmail(email, password, name);
+        }
+        closeModal();
+      } catch (e) {
+        showError(e.message.replace('Firebase: ', '').replace(/\(auth\/[\w-]+\)\.?/, '').trim());
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    function getInitials(user) {
+      if (user.displayName) return user.displayName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+      return user.email ? user.email[0].toUpperCase() : '?';
+    }
+
+    onAuthChange(user => {
+      if (user) { hideLoginModal(); } else { showLoginModal(); }
+      if (!authWrap) return;
+      if (user) {
+        const initials = getInitials(user);
+        const name = user.displayName || user.email.split('@')[0];
+        const avatar = user.photoURL
+          ? `<img src="${user.photoURL}" class="nav-user-avatar" alt="${name}" referrerpolicy="no-referrer">`
+          : `<div class="nav-user-avatar">${initials}</div>`;
+        authWrap.innerHTML = `
+          <div class="nav-user-btn" id="nav-user-btn" tabindex="0">
+            ${avatar}
+            <span class="nav-user-name">${name}</span>
+            <div class="nav-user-dropdown">
+              <button class="nav-dropdown-item danger" id="nav-signout">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                Sign Out
+              </button>
+            </div>
+          </div>`;
+        document.getElementById('nav-user-btn').addEventListener('click', function() {
+          this.classList.toggle('open');
+        });
+        document.addEventListener('click', e => {
+          const btn = document.getElementById('nav-user-btn');
+          if (btn && !btn.contains(e.target)) btn.classList.remove('open');
+        }, { capture: true });
+        document.getElementById('nav-signout').addEventListener('click', async e => {
+          e.stopPropagation();
+          await signOut();
+        });
+      } else {
+        authWrap.innerHTML = `<button class="nav-auth-btn" onclick="window.openAuthModal()">Sign In</button>`;
+      }
+    });
+  </script>
+
+  <script>
+    // ── Typewriter ──────────────────────────────────────
+    const phrases = [
+      'Full Stack Developer',
+      'AI Systems Builder',
+      'Automation Engineer',
+      'Backend Architect',
+    ];
+    const el = document.getElementById('typewriter-text');
+    let pi = 0, ci = 0, deleting = false;
+
+    function type() {
+      const phrase = phrases[pi];
+      el.textContent = deleting ? phrase.slice(0, ci--) : phrase.slice(0, ci++);
+      if (!deleting && ci === phrase.length + 1) {
+        deleting = true;
+        setTimeout(type, 1600);
+        return;
+      }
+      if (deleting && ci < 0) {
+        deleting = false;
+        ci = 0;
+        pi = (pi + 1) % phrases.length;
+      }
+      setTimeout(type, deleting ? 40 : 80);
+    }
+    type();
+
+    // ── Scroll Reveal ───────────────────────────────────
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // ── Navbar Scroll Highlight ─────────────────────────
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function updateActiveLink() {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 120) current = s.id;
+      });
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveLink, { passive: true });
+    updateActiveLink();
+
+    // ── GitHub Repos ────────────────────────────────────
+    const username = 'cid-kageno-dev';
+    const grid = document.getElementById('projects-grid');
+    const repoCountEl = document.getElementById('repo-count');
+
+    const langIcons = {
+      Python: '🐍', JavaScript: '⚡', TypeScript: '🔷', HTML: '🌐',
+      CSS: '🎨', Shell: '🖥️', Go: '🐹', Rust: '🦀', default: '💻'
+    };
+
+    fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=50`)
+      .then(r => r.json())
+      .then(repos => {
+        grid.innerHTML = '';
+        if (!Array.isArray(repos)) {
+          grid.innerHTML = '<p class="loading-placeholder" style="color:#f87171;">GitHub user not found.</p>';
+          return;
+        }
+
+        const validRepos = repos.filter(r => !r.fork).slice(0, 6);
+        repoCountEl.textContent = repos.filter(r => !r.fork).length || '—';
+
+        if (validRepos.length === 0) {
+          grid.innerHTML = '<p class="loading-placeholder">No public projects found yet.</p>';
+          return;
+        }
+
+        validRepos.forEach((repo, i) => {
+          const icon = langIcons[repo.language] || langIcons.default;
+          const card = document.createElement('div');
+          card.className = `card project-card reveal reveal-delay-${(i % 3) + 1}`;
+          card.innerHTML = `
+            <div class="project-card-top">
+              <div class="project-icon">${icon}</div>
+              <h3 class="project-name">${repo.name}</h3>
+              <p class="project-desc">${repo.description || 'No description provided.'}</p>
+            </div>
+            <div class="project-footer">
+              <span class="lang-badge">${repo.language || 'Code'}</span>
+              <a href="${repo.html_url}" target="_blank" class="btn btn-ghost btn-sm">
+                View Code
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          `;
+          grid.appendChild(card);
+          // Re-observe new cards
+          observer.observe(card);
+        });
+      })
+      .catch(() => {
+        grid.innerHTML = '<p class="loading-placeholder" style="color:#f87171;">Failed to load projects.</p>';
+      });
+  </script>
+
+</body>
+</html>
