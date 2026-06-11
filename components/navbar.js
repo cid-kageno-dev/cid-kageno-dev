@@ -7,6 +7,7 @@ class CustomNavbar extends HTMLElement {
           <a href="#projects" class="nav-link">Projects<span class="nav-dot"></span></a>
           <a href="#tools" class="nav-link">Tools<span class="nav-dot"></span></a>
           <a href="#contact" class="nav-link">Contact<span class="nav-dot"></span></a>
+          <button class="nav-auth-btn" id="nav-auth-btn">Sign In</button>
         </div>
       </nav>
     `;
@@ -22,6 +23,29 @@ class CustomNavbar extends HTMLElement {
         inner.classList.remove('scrolled');
       }
     }, { passive: true });
+
+    const btn = this.querySelector('#nav-auth-btn');
+    btn.addEventListener('click', () => {
+      if (btn.dataset.signedIn === 'true') {
+        document.dispatchEvent(new CustomEvent('nav-signout'));
+      } else {
+        if (typeof window.openAuthModal === 'function') window.openAuthModal();
+      }
+    });
+
+    document.addEventListener('auth-state-change', e => {
+      const user = e.detail.user;
+      if (user) {
+        const name = user.displayName || user.email?.split('@')[0] || 'You';
+        btn.textContent = name;
+        btn.dataset.signedIn = 'true';
+        btn.title = 'Click to sign out';
+      } else {
+        btn.textContent = 'Sign In';
+        btn.dataset.signedIn = 'false';
+        btn.title = '';
+      }
+    });
   }
 }
 customElements.define('custom-navbar', CustomNavbar);
