@@ -27,8 +27,7 @@ A modern, animated personal developer portfolio for Cid Kageno, a Full Stack Dev
 ├── components/       # Shared Web Components
 │   ├── navbar.js     # <custom-navbar>
 │   └── footer.js     # <custom-footer>
-├── firebase-config.js # Firebase client config (hardcoded public keys)
-├── auth.js           # Firebase Auth helpers
+├── auth-config.js    # Firebase client config + Auth helpers
 ├── index.html        # Main portfolio page
 ├── style.css         # All styles
 ├── server.js         # Express server (port 5000) — static files + API proxy
