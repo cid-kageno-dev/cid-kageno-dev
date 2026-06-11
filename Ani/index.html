@@ -59,6 +59,21 @@
           </div>
           <button class="ani-auth-submit" id="ani-auth-submit" type="submit">Continue</button>
         </form>
+
+        <div class="ani-auth-verify" id="ani-auth-verify">
+          <p class="auth-verify-info">We sent a 6-digit code to</p>
+          <p class="auth-verify-email" id="ani-verify-email"></p>
+          <div class="auth-otp-row" id="ani-otp-row">
+            <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+            <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+            <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+            <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+            <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+            <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+          </div>
+          <button class="ani-auth-submit" id="ani-otp-submit" type="button">Verify Email</button>
+          <button class="auth-resend-btn" id="ani-resend" type="button">Resend code</button>
+        </div>
       </div>
     </div>
 
@@ -66,20 +81,60 @@
     <script type="module">
       import { signInWithGoogle, signInWithGitHub, signInWithEmail, signUpWithEmail, signOut, onAuthChange, getIdToken } from '/auth.js';
 
-      // Expose token getter so main.js can attach it to chat requests
       window.getAniIdToken = () => getIdToken();
 
-      const overlay  = document.getElementById('ani-auth-overlay');
-      const closeBtn = document.getElementById('ani-auth-close');
-      const tabIn    = document.getElementById('ani-tab-signin');
-      const tabUp    = document.getElementById('ani-tab-signup');
-      const errBox   = document.getElementById('ani-auth-error');
-      const nameRow  = document.getElementById('ani-name-row');
-      const form     = document.getElementById('ani-auth-form');
+      const overlay   = document.getElementById('ani-auth-overlay');
+      const closeBtn  = document.getElementById('ani-auth-close');
+      const tabIn     = document.getElementById('ani-tab-signin');
+      const tabUp     = document.getElementById('ani-tab-signup');
+      const errBox    = document.getElementById('ani-auth-error');
+      const nameRow   = document.getElementById('ani-name-row');
+      const form      = document.getElementById('ani-auth-form');
       const submitBtn = document.getElementById('ani-auth-submit');
+      const verifyDiv = document.getElementById('ani-auth-verify');
+      const socialDiv = document.querySelector('.ani-auth-social');
+      const orText    = document.querySelector('.ani-auth-or');
+      const tabsDiv   = document.querySelector('.ani-auth-tabs');
 
-      let mode = 'signin';
-      let isGated = false;
+      let mode         = 'signin';
+      let isGated      = false;
+      let pendingSignup = null;
+      let resendTimer   = null;
+
+      // ── OTP boxes ─────────────────────────────────────
+      const otpBoxes = [...document.querySelectorAll('#ani-otp-row .auth-otp-box')];
+      otpBoxes.forEach((box, i) => {
+        box.addEventListener('input', () => {
+          box.value = box.value.replace(/\D/g, '').slice(-1);
+          box.classList.toggle('filled', !!box.value);
+          if (box.value && i < otpBoxes.length - 1) otpBoxes[i + 1].focus();
+        });
+        box.addEventListener('keydown', e => {
+          if (e.key === 'Backspace' && !box.value && i > 0) otpBoxes[i - 1].focus();
+        });
+        box.addEventListener('paste', e => {
+          e.preventDefault();
+          const digits = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+          otpBoxes.forEach((b, j) => { b.value = digits[j] || ''; b.classList.toggle('filled', !!b.value); });
+          otpBoxes[Math.min(digits.length, otpBoxes.length - 1)].focus();
+        });
+      });
+
+      function getOTPCode() { return otpBoxes.map(b => b.value).join(''); }
+      function clearOTP()   { otpBoxes.forEach(b => { b.value = ''; b.classList.remove('filled'); }); }
+
+      function startResendCooldown() {
+        const btn = document.getElementById('ani-resend');
+        let secs = 60;
+        btn.disabled = true;
+        btn.textContent = `Resend in ${secs}s`;
+        clearInterval(resendTimer);
+        resendTimer = setInterval(() => {
+          secs--;
+          if (secs <= 0) { clearInterval(resendTimer); btn.disabled = false; btn.textContent = 'Resend code'; }
+          else btn.textContent = `Resend in ${secs}s`;
+        }, 1000);
+      }
 
       function openModal(gated = false) {
         isGated = gated;
@@ -87,11 +142,7 @@
         overlay.classList.toggle('gated', gated);
         document.getElementById('ani-auth-email').focus();
       }
-      function closeModal() {
-        if (isGated) return;
-        overlay.classList.remove('open');
-        clearErr();
-      }
+      function closeModal() { if (isGated) return; forceClose(); }
       function showErr(m)   { errBox.textContent = m; errBox.classList.add('visible'); }
       function clearErr()   { errBox.classList.remove('visible'); }
 
@@ -101,19 +152,29 @@
 
       function setMode(m) {
         mode = m;
+        const isVerify = m === 'verify';
         tabIn.classList.toggle('active', m === 'signin');
         tabUp.classList.toggle('active', m === 'signup');
         nameRow.classList.toggle('visible', m === 'signup');
+        form.style.display       = isVerify ? 'none' : '';
+        verifyDiv.style.display  = isVerify ? '' : 'none';
+        if (socialDiv) socialDiv.style.display = isVerify ? 'none' : '';
+        if (orText)    orText.style.display    = isVerify ? 'none' : '';
+        if (tabsDiv)   tabsDiv.style.display   = isVerify ? 'none' : '';
         clearErr();
       }
-      tabIn.addEventListener('click', () => setMode('signin'));
-      tabUp.addEventListener('click', () => setMode('signup'));
 
       function forceClose() {
         isGated = false;
         overlay.classList.remove('open', 'gated');
+        setMode('signin');
+        pendingSignup = null;
+        clearOTP();
         clearErr();
       }
+
+      tabIn.addEventListener('click', () => setMode('signin'));
+      tabUp.addEventListener('click', () => setMode('signup'));
 
       document.getElementById('ani-btn-google').addEventListener('click', async () => {
         clearErr();
@@ -136,12 +197,53 @@
         if (!email || !pass) { showErr('Please enter your email and password.'); return; }
         submitBtn.disabled = true;
         try {
-          if (mode === 'signin') await signInWithEmail(email, pass);
-          else await signUpWithEmail(email, pass, name);
-          forceClose();
+          if (mode === 'signin') {
+            await signInWithEmail(email, pass);
+            forceClose();
+          } else {
+            const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error);
+            pendingSignup = { email, password: pass, name };
+            document.getElementById('ani-verify-email').textContent = email;
+            setMode('verify');
+            clearOTP();
+            otpBoxes[0].focus();
+            startResendCooldown();
+          }
         } catch (e) {
           showErr(e.message.replace('Firebase: ', '').replace(/\(auth\/[\w-]+\)\.?/, '').trim());
         } finally { submitBtn.disabled = false; }
+      });
+
+      document.getElementById('ani-otp-submit').addEventListener('click', async () => {
+        const code = getOTPCode();
+        if (code.length < 6) { showErr('Please enter all 6 digits.'); return; }
+        clearErr();
+        const verifyBtn = document.getElementById('ani-otp-submit');
+        verifyBtn.disabled = true;
+        try {
+          const res  = await fetch('/api/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email, code }) });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error);
+          await signUpWithEmail(pendingSignup.email, pendingSignup.password, pendingSignup.name);
+          forceClose();
+        } catch (e) {
+          showErr(e.message.replace('Firebase: ', '').replace(/\(auth\/[\w-]+\)\.?/, '').trim());
+          clearOTP(); otpBoxes[0].focus();
+        } finally { verifyBtn.disabled = false; }
+      });
+
+      document.getElementById('ani-resend').addEventListener('click', async () => {
+        if (!pendingSignup) return;
+        clearErr();
+        try {
+          const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email }) });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error);
+          clearOTP(); otpBoxes[0].focus();
+          startResendCooldown();
+        } catch (e) { showErr(e.message); }
       });
 
       function getInitials(user) {

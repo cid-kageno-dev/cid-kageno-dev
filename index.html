@@ -235,6 +235,21 @@
         <button class="auth-submit-btn" id="auth-submit" type="submit">Continue</button>
       </form>
 
+      <div class="auth-verify" id="auth-verify">
+        <p class="auth-verify-info">We sent a 6-digit code to</p>
+        <p class="auth-verify-email" id="auth-verify-email"></p>
+        <div class="auth-otp-row" id="auth-otp-row">
+          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
+        </div>
+        <button class="auth-submit-btn" id="auth-otp-submit" type="button">Verify Email</button>
+        <button class="auth-resend-btn" id="auth-resend" type="button">Resend code</button>
+      </div>
+
       <p class="auth-or-text">Or continue with</p>
 
       <div class="auth-social-icons">
@@ -269,8 +284,12 @@
     const nameRow   = document.getElementById('auth-name-row');
     const submitBtn = document.getElementById('auth-submit');
     const authWrap  = document.getElementById('nav-auth-wrap');
+    const verifyDiv = document.getElementById('auth-verify');
+    const authForm  = document.getElementById('auth-form');
+    const orText    = document.querySelector('.auth-or-text');
+    const socialDiv = document.querySelector('.auth-social-icons');
+    const tabsDiv   = document.querySelector('.auth-tabs');
 
-    // ── Input check indicators ──────────────────────────
     const emailInput = document.getElementById('auth-email');
     const passInput  = document.getElementById('auth-password');
     const emailCheck = document.getElementById('email-check');
@@ -284,68 +303,108 @@
     });
 
     let mode = 'signin';
-
     let autoLoginTimer = null;
+    let pendingSignup  = null;
+    let resendTimer    = null;
 
+    // ── OTP boxes: auto-advance, backspace, paste ───────
+    const otpBoxes = [...document.querySelectorAll('#auth-otp-row .auth-otp-box')];
+    otpBoxes.forEach((box, i) => {
+      box.addEventListener('input', () => {
+        box.value = box.value.replace(/\D/g, '').slice(-1);
+        box.classList.toggle('filled', !!box.value);
+        if (box.value && i < otpBoxes.length - 1) otpBoxes[i + 1].focus();
+      });
+      box.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !box.value && i > 0) otpBoxes[i - 1].focus();
+      });
+      box.addEventListener('paste', e => {
+        e.preventDefault();
+        const digits = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+        otpBoxes.forEach((b, j) => { b.value = digits[j] || ''; b.classList.toggle('filled', !!b.value); });
+        otpBoxes[Math.min(digits.length, otpBoxes.length - 1)].focus();
+      });
+    });
+
+    function getOTPCode() {
+      return otpBoxes.map(b => b.value).join('');
+    }
+    function clearOTP() {
+      otpBoxes.forEach(b => { b.value = ''; b.classList.remove('filled'); });
+    }
+
+    function startResendCooldown() {
+      const btn = document.getElementById('auth-resend');
+      let secs = 60;
+      btn.disabled = true;
+      btn.textContent = `Resend in ${secs}s`;
+      clearInterval(resendTimer);
+      resendTimer = setInterval(() => {
+        secs--;
+        if (secs <= 0) { clearInterval(resendTimer); btn.disabled = false; btn.textContent = 'Resend code'; }
+        else btn.textContent = `Resend in ${secs}s`;
+      }, 1000);
+    }
+
+    // ── Modal show/hide ─────────────────────────────────
     function showLoginModal() {
       if (sessionStorage.getItem('login-dismissed')) return;
-      autoLoginTimer = setTimeout(() => {
-        overlay.classList.add('open');
-        document.getElementById('auth-email').focus();
-      }, 1500);
+      autoLoginTimer = setTimeout(() => { overlay.classList.add('open'); emailInput.focus(); }, 1500);
     }
+    function hideLoginModal() { clearTimeout(autoLoginTimer); }
 
-    function hideLoginModal() {
-      clearTimeout(autoLoginTimer);
-    }
-
-    window.openAuthModal = () => {
-      overlay.classList.add('open');
-      document.getElementById('auth-email').focus();
-    };
+    window.openAuthModal = () => { overlay.classList.add('open'); emailInput.focus(); };
 
     function closeModal() {
       overlay.classList.remove('open');
       clearError();
+      setMode('signin');
+      pendingSignup = null;
+      clearOTP();
       sessionStorage.setItem('login-dismissed', '1');
     }
     closeBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-    function showError(msg) {
-      authError.textContent = msg;
-      authError.classList.add('visible');
-    }
-    function clearError() { authError.classList.remove('visible'); }
+    function showError(msg) { authError.textContent = msg; authError.classList.add('visible'); }
+    function clearError()   { authError.classList.remove('visible'); }
 
     function setMode(m) {
       mode = m;
+      const isVerify = m === 'verify';
       tabSignIn.classList.toggle('active', m === 'signin');
       tabSignUp.classList.toggle('active', m === 'signup');
       nameRow.classList.toggle('visible', m === 'signup');
+      authForm.style.display  = isVerify ? 'none' : '';
+      verifyDiv.style.display = isVerify ? '' : 'none';
+      orText.style.display    = isVerify ? 'none' : '';
+      socialDiv.style.display = isVerify ? 'none' : '';
+      tabsDiv.style.display   = isVerify ? 'none' : '';
       clearError();
     }
 
     tabSignIn.addEventListener('click', () => setMode('signin'));
     tabSignUp.addEventListener('click', () => setMode('signup'));
 
+    // ── Social sign-in ──────────────────────────────────
     document.getElementById('btn-google').addEventListener('click', async () => {
       clearError();
       try { await signInWithGoogle(); closeModal(); }
-      catch (e) { showError(e.message.replace('Firebase: ', '')); }
+      catch (e) { showError(e.message.replace('Firebase: ', '').replace(/\(auth\/[\w-]+\)\.?/, '').trim()); }
     });
 
     document.getElementById('btn-github').addEventListener('click', async () => {
       clearError();
       try { await signInWithGitHub(); closeModal(); }
-      catch (e) { showError(e.message.replace('Firebase: ', '')); }
+      catch (e) { showError(e.message.replace('Firebase: ', '').replace(/\(auth\/[\w-]+\)\.?/, '').trim()); }
     });
 
-    document.getElementById('auth-form').addEventListener('submit', async e => {
+    // ── Email / password form ───────────────────────────
+    authForm.addEventListener('submit', async e => {
       e.preventDefault();
-      const email    = document.getElementById('auth-email').value.trim();
-      const password = document.getElementById('auth-password').value;
+      const email    = emailInput.value.trim();
+      const password = passInput.value;
       const name     = document.getElementById('auth-name').value.trim();
       clearError();
       if (!email || !password) { showError('Please enter your email and password.'); return; }
@@ -353,10 +412,19 @@
       try {
         if (mode === 'signin') {
           await signInWithEmail(email, password);
+          closeModal();
         } else {
-          await signUpWithEmail(email, password, name);
+          // Send OTP first — create account only after verification
+          const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error);
+          pendingSignup = { email, password, name };
+          document.getElementById('auth-verify-email').textContent = email;
+          setMode('verify');
+          clearOTP();
+          otpBoxes[0].focus();
+          startResendCooldown();
         }
-        closeModal();
       } catch (e) {
         showError(e.message.replace('Firebase: ', '').replace(/\(auth\/[\w-]+\)\.?/, '').trim());
       } finally {
@@ -364,6 +432,41 @@
       }
     });
 
+    // ── OTP verify button ───────────────────────────────
+    document.getElementById('auth-otp-submit').addEventListener('click', async () => {
+      const code = getOTPCode();
+      if (code.length < 6) { showError('Please enter all 6 digits.'); return; }
+      clearError();
+      const verifyBtn = document.getElementById('auth-otp-submit');
+      verifyBtn.disabled = true;
+      try {
+        const res  = await fetch('/api/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email, code }) });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        await signUpWithEmail(pendingSignup.email, pendingSignup.password, pendingSignup.name);
+        closeModal();
+      } catch (e) {
+        showError(e.message.replace('Firebase: ', '').replace(/\(auth\/[\w-]+\)\.?/, '').trim());
+        clearOTP(); otpBoxes[0].focus();
+      } finally {
+        verifyBtn.disabled = false;
+      }
+    });
+
+    // ── Resend button ───────────────────────────────────
+    document.getElementById('auth-resend').addEventListener('click', async () => {
+      if (!pendingSignup) return;
+      clearError();
+      try {
+        const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email }) });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        clearOTP(); otpBoxes[0].focus();
+        startResendCooldown();
+      } catch (e) { showError(e.message); }
+    });
+
+    // ── Auth state ──────────────────────────────────────
     function getInitials(user) {
       if (user.displayName) return user.displayName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
       return user.email ? user.email[0].toUpperCase() : '?';
@@ -389,9 +492,7 @@
               </button>
             </div>
           </div>`;
-        document.getElementById('nav-user-btn').addEventListener('click', function() {
-          this.classList.toggle('open');
-        });
+        document.getElementById('nav-user-btn').addEventListener('click', function() { this.classList.toggle('open'); });
         document.addEventListener('click', e => {
           const btn = document.getElementById('nav-user-btn');
           if (btn && !btn.contains(e.target)) btn.classList.remove('open');

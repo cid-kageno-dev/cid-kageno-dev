@@ -1,9 +1,17 @@
-const express = require('express');
-const https   = require('https');
-const path    = require('path');
+const express    = require('express');
+const https      = require('https');
+const path       = require('path');
+const nodemailer = require('nodemailer');
 
 const app = express();
 app.use(express.json());
+
+// ── In-memory OTP store: email → { code, expiresAt } ──────────────────────
+const otpStore = new Map();
+
+function generateOTP() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -58,6 +66,71 @@ app.options('*', (req, res) => {
   }).sendStatus(204);
 });
 
+// ── Send OTP ──────────────────────────────────────────────────────────────
+app.post('/api/send-otp', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email is required.' });
+
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    return res.status(500).json({ error: 'Email service not configured on server.' });
+  }
+
+  const code = generateOTP();
+  otpStore.set(email.toLowerCase(), { code, expiresAt: Date.now() + 10 * 60 * 1000 });
+
+  try {
+    const transporter = nodemailer.createTransport({
+      host:   process.env.EMAIL_HOST || 'smtp.gmail.com',
+      port:   parseInt(process.env.EMAIL_PORT || '587'),
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from:    `"Cid Kageno" <${process.env.EMAIL_USER}>`,
+      to:      email,
+      subject: 'Your verification code',
+      html: `
+        <div style="font-family:Inter,Arial,sans-serif;max-width:480px;margin:0 auto;padding:36px 32px;background:#0f0f15;color:#fff;border-radius:16px;border:1px solid rgba(124,106,247,0.15)">
+          <h2 style="margin:0 0 8px;font-size:22px;font-weight:700">Verify your email</h2>
+          <p style="color:rgba(255,255,255,0.55);margin:0 0 28px;font-size:14px;line-height:1.6">Enter this code to complete your sign-up. It expires in <strong style="color:rgba(255,255,255,0.8)">10 minutes</strong>.</p>
+          <div style="font-size:44px;font-weight:800;letter-spacing:14px;color:#7c6af7;text-align:center;padding:22px 16px;background:rgba(124,106,247,0.08);border-radius:14px;border:1px solid rgba(124,106,247,0.2);font-family:monospace">${code}</div>
+          <p style="color:rgba(255,255,255,0.3);font-size:12px;margin:24px 0 0;text-align:center">If you didn't request this, you can safely ignore this email.</p>
+        </div>`,
+    });
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('OTP email error:', err.message);
+    otpStore.delete(email.toLowerCase());
+    res.status(500).json({ error: 'Failed to send verification email.' });
+  }
+});
+
+// ── Verify OTP ────────────────────────────────────────────────────────────
+app.post('/api/verify-otp', (req, res) => {
+  const { email, code } = req.body;
+  const key   = email?.toLowerCase();
+  const entry = otpStore.get(key);
+
+  if (!entry) {
+    return res.status(400).json({ error: 'No code found for this email. Request a new one.' });
+  }
+  if (Date.now() > entry.expiresAt) {
+    otpStore.delete(key);
+    return res.status(400).json({ error: 'Code expired. Please request a new one.' });
+  }
+  if (entry.code !== String(code).trim()) {
+    return res.status(400).json({ error: 'Incorrect code. Please try again.' });
+  }
+
+  otpStore.delete(key);
+  res.json({ ok: true });
+});
+
 // ── GitHub repos proxy ────────────────────────────────────────────────────
 app.get('/api/github-repos', async (req, res) => {
   try {
@@ -82,7 +155,6 @@ app.post('/api/chat', async (req, res) => {
     const authHeader = req.headers['authorization'] || '';
     const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
-    // Firebase API key is public by design — same value as in firebase-config.js
     const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyAxyBAXzN9hiNjr5dx50I9xrrtImVEbD6k';
 
     if (token) {
@@ -98,9 +170,7 @@ app.post('/api/chat', async (req, res) => {
             userName = user.displayName || (user.email ? user.email.split('@')[0] : 'Guest');
           }
         }
-      } catch (_) {
-        // Token verification failed — fall back to Guest
-      }
+      } catch (_) {}
     }
 
     const renderRes = await httpsPost(
@@ -117,12 +187,10 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// ── Static files (serves index.html, Ani/, assets/, etc.) ─────────────────
+// ── Static files ──────────────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname), { index: 'index.html' }));
 
 // ── Vercel / local dual-mode export ───────────────────────────────────────
-// When imported by Vercel's serverless runtime, `module.exports` is used.
-// When run directly with `node server.js`, the listen call starts the server.
 module.exports = app;
 
 if (require.main === module) {
