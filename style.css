@@ -1444,33 +1444,37 @@ section {
 }
 
 .auth-otp-single {
+  -webkit-appearance: none;
+  appearance: none;
   display: block;
   width: 100%;
-  padding: 16px;
+  padding: 16px 12px;
   margin-bottom: 14px;
   text-align: center;
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
-  letter-spacing: 10px;
+  letter-spacing: 8px;
   font-family: 'JetBrains Mono', monospace;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 14px;
   color: #ffffff;
   outline: none;
   box-sizing: border-box;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  -webkit-text-fill-color: #ffffff;
 }
 
 .auth-otp-single::placeholder {
-  color: rgba(255,255,255,0.15);
-  letter-spacing: 10px;
+  color: rgba(255,255,255,0.18);
+  -webkit-text-fill-color: rgba(255,255,255,0.18);
+  letter-spacing: 8px;
 }
 
 .auth-otp-single:focus {
-  border-color: rgba(124,106,247,0.7);
-  background: rgba(124,106,247,0.06);
-  box-shadow: 0 0 0 3px rgba(124,106,247,0.15);
+  border-color: rgba(124,106,247,0.8);
+  background: rgba(124,106,247,0.07);
+  box-shadow: 0 0 0 3px rgba(124,106,247,0.18);
 }
 
 .auth-resend-btn {

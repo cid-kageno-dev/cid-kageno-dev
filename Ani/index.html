@@ -183,11 +183,11 @@
             const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error);
-            pendingSignup = { email, password: pass, name };
+            pendingSignup = { email, password: pass, name, token: data.token };
             document.getElementById('ani-verify-email').textContent = email;
             setMode('verify');
             clearOTP();
-            otpBoxes[0].focus();
+            otpInput.focus();
             startResendCooldown();
           }
         } catch (e) {
@@ -202,7 +202,7 @@
         const verifyBtn = document.getElementById('ani-otp-submit');
         verifyBtn.disabled = true;
         try {
-          const res  = await fetch('/api/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email, code }) });
+          const res  = await fetch('/api/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email, code, token: pendingSignup.token }) });
           const data = await res.json();
           if (!res.ok) throw new Error(data.error);
           await signUpWithEmail(pendingSignup.email, pendingSignup.password, pendingSignup.name);
@@ -220,7 +220,8 @@
           const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email }) });
           const data = await res.json();
           if (!res.ok) throw new Error(data.error);
-          clearOTP(); otpBoxes[0].focus();
+          pendingSignup.token = data.token;
+          clearOTP(); otpInput.focus();
           startResendCooldown();
         } catch (e) { showErr(e.message); }
       });

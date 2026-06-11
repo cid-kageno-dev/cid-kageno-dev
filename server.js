@@ -1,16 +1,38 @@
 const express    = require('express');
 const https      = require('https');
 const path       = require('path');
+const crypto     = require('crypto');
 const nodemailer = require('nodemailer');
 
 const app = express();
 app.use(express.json());
 
-// ── In-memory OTP store: email → { code, expiresAt } ──────────────────────
-const otpStore = new Map();
+// ── Stateless HMAC-signed OTP tokens (works across serverless instances) ───
+const OTP_SECRET = process.env.OTP_SECRET || 'cid-kageno-otp-2024';
 
 function generateOTP() {
   return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+function signOTPToken(email, code, expiresAt) {
+  const payload = Buffer.from(JSON.stringify({ email: email.toLowerCase(), code, expiresAt })).toString('base64');
+  const sig     = crypto.createHmac('sha256', OTP_SECRET).update(payload).digest('base64');
+  return `${payload}.${sig}`;
+}
+
+function verifyOTPToken(token, enteredCode, email) {
+  try {
+    const dot     = token.lastIndexOf('.');
+    const payload = token.slice(0, dot);
+    const sig     = token.slice(dot + 1);
+    const expected = crypto.createHmac('sha256', OTP_SECRET).update(payload).digest('base64');
+    if (sig !== expected) return { ok: false, error: 'Invalid token.' };
+    const data = JSON.parse(Buffer.from(payload, 'base64').toString());
+    if (data.email !== email.toLowerCase()) return { ok: false, error: 'Email mismatch.' };
+    if (Date.now() > data.expiresAt)        return { ok: false, error: 'Code expired. Please request a new one.' };
+    if (data.code !== String(enteredCode).trim()) return { ok: false, error: 'Incorrect code. Please try again.' };
+    return { ok: true };
+  } catch { return { ok: false, error: 'Invalid token.' }; }
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────
@@ -75,18 +97,16 @@ app.post('/api/send-otp', async (req, res) => {
     return res.status(500).json({ error: 'Email service not configured on server.' });
   }
 
-  const code = generateOTP();
-  otpStore.set(email.toLowerCase(), { code, expiresAt: Date.now() + 10 * 60 * 1000 });
+  const code      = generateOTP();
+  const expiresAt = Date.now() + 10 * 60 * 1000;
+  const token     = signOTPToken(email, code, expiresAt);
 
   try {
     const transporter = nodemailer.createTransport({
       host:   process.env.EMAIL_HOST || 'smtp.gmail.com',
       port:   parseInt(process.env.EMAIL_PORT || '587'),
       secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
     });
 
     await transporter.sendMail({
@@ -102,32 +122,21 @@ app.post('/api/send-otp', async (req, res) => {
         </div>`,
     });
 
-    res.json({ ok: true });
+    res.json({ ok: true, token });
   } catch (err) {
     console.error('OTP email error:', err.message);
-    otpStore.delete(email.toLowerCase());
     res.status(500).json({ error: 'Failed to send verification email.' });
   }
 });
 
 // ── Verify OTP ────────────────────────────────────────────────────────────
 app.post('/api/verify-otp', (req, res) => {
-  const { email, code } = req.body;
-  const key   = email?.toLowerCase();
-  const entry = otpStore.get(key);
-
-  if (!entry) {
-    return res.status(400).json({ error: 'No code found for this email. Request a new one.' });
+  const { email, code, token } = req.body;
+  if (!email || !code || !token) {
+    return res.status(400).json({ error: 'Missing required fields.' });
   }
-  if (Date.now() > entry.expiresAt) {
-    otpStore.delete(key);
-    return res.status(400).json({ error: 'Code expired. Please request a new one.' });
-  }
-  if (entry.code !== String(code).trim()) {
-    return res.status(400).json({ error: 'Incorrect code. Please try again.' });
-  }
-
-  otpStore.delete(key);
+  const result = verifyOTPToken(token, code, email);
+  if (!result.ok) return res.status(400).json({ error: result.error });
   res.json({ ok: true });
 });
 
