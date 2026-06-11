@@ -150,7 +150,8 @@ app.get('/api/github-repos', async (req, res) => {
       ghHeaders
     );
     res.status(ghRes.status).type('json').send(ghRes.body);
-  } catch {
+  } catch (err) {
+    console.error('[github-repos]', err.message);
     res.status(500).json({ error: 'Failed to fetch repos' });
   }
 });
@@ -191,7 +192,8 @@ app.post('/api/chat', async (req, res) => {
        .status(renderRes.status)
        .type('json')
        .send(renderRes.body);
-  } catch {
+  } catch (err) {
+    console.error('[chat]', err.message);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

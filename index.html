@@ -273,13 +273,7 @@
       CSS: '🎨', Shell: '🖥️', Go: '🐹', Rust: '🦀', default: '💻'
     };
 
-    // Try the local proxy first (Replit / Node.js hosts).
-    // If unavailable (e.g. static hosts like Amplify), fall back to GitHub API directly.
-    const reposFetch = fetch('/api/github-repos')
-      .then(r => { if (!r.ok) throw new Error('proxy unavailable'); return r; })
-      .catch(() => fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=50`));
-
-    reposFetch
+    fetch('/api/github-repos')
       .then(r => r.json())
       .then(repos => {
         grid.innerHTML = '';

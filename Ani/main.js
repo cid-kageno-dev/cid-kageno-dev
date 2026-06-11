@@ -131,11 +131,7 @@ const statusText = document.getElementById("status-text");
 const backBtn = document.getElementById("back-btn");
 
 // 3. Configuration
-// Chat requests go directly to the Ani backend on Render.
-// The Authorization header carries the Firebase ID token so your Render backend
-// can verify it, extract the user's name, and inject it into Ani's system prompt.
-// See backend setup notes in README.md.
-const URL  = "https://ani-jms7.onrender.com/api/chat";
+const URL  = "/api/chat";
 const BURL = "https://ani-jms7.onrender.com/";
 
 /* ====================================
@@ -272,11 +268,6 @@ async function sendMessage() {
 
   const loader = showTyping();
 
-  // ── Get the current user's auth token ──────────────────────────────────
-  // Using Firebase Auth (via window.getAniIdToken exposed in index.html).
-  // Swap this line if you change auth providers:
-  //   Clerk:    await window.Clerk.session.getToken()
-  //   Supabase: (await supabase.auth.getSession()).data.session?.access_token
   let authToken = null;
   if (typeof window.getAniIdToken === 'function') {
     try { authToken = await window.getAniIdToken(); } catch (_) {}
@@ -294,7 +285,6 @@ async function sendMessage() {
     if (!res.ok) throw new Error("API Error");
     const data = await res.json();
     loader.remove();
-    // Use data.response or data.reply depending on your backend
     addMessage(data.reply || data.response, "bot");
     setStatus(true);
   } catch (err) {
