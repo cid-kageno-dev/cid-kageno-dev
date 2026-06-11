@@ -235,7 +235,7 @@
         <button class="auth-submit-btn" id="auth-submit" type="submit">Continue</button>
       </form>
 
-      <div class="auth-verify" id="auth-verify" style="display:none">
+      <div class="auth-verify" id="auth-verify">
         <p class="auth-verify-info">We sent a 6-digit code to</p>
         <p class="auth-verify-email" id="auth-verify-email"></p>
         <input class="auth-otp-single" id="auth-otp-input" type="text" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="000000" autocomplete="one-time-code">
@@ -352,7 +352,7 @@
       tabSignUp.classList.toggle('active', m === 'signup');
       nameRow.classList.toggle('visible', m === 'signup');
       authForm.style.display  = isVerify ? 'none' : '';
-      verifyDiv.style.display = isVerify ? '' : 'none';
+      verifyDiv.style.display = isVerify ? 'block' : 'none';
       orText.style.display    = isVerify ? 'none' : '';
       socialDiv.style.display = isVerify ? 'none' : '';
       tabsDiv.style.display   = isVerify ? 'none' : '';
