@@ -1,21 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
 /* ===============================
    VARS (Default = Dark Mode)
    =============================== */
 :root {
-  --bg-dark: #050507;
-  --glass-panel: rgba(20, 20, 25, 0.85);
+  --bg-dark: #050508;
+  --glass-panel: rgba(13, 13, 20, 0.92);
   --glass-border: rgba(255, 255, 255, 0.08);
-  
-  /* DARK MODE TEXT COLOR -> WHITE */
-  --text-primary: #ffffff; 
-  --text-secondary: #9496a1;
-  
-  --accent-primary: #5865F2; /* Discord/Blurple style */
-  --accent-gradient: linear-gradient(135deg, #5865F2, #4752C4);
-  --bot-bubble: rgba(255, 255, 255, 0.08);
-  --online: #23a559;
-  --offline: #fa4a4a;
+
+  --text-primary: #f0f0f8;
+  --text-secondary: rgba(240,240,248,0.5);
+
+  --accent-primary: #7c6af7;
+  --accent-2: #a78bfa;
+  --accent-3: #06b6d4;
+  --accent-gradient: linear-gradient(135deg, #7c6af7, #06b6d4);
+  --bot-bubble: rgba(255, 255, 255, 0.06);
+  --online: #22c55e;
+  --offline: #f87171;
   --header-height: 60px;
+  --trans: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ===============================
@@ -27,7 +31,7 @@ html, body {
   margin: 0; padding: 0;
   width: 100%; height: 100%;
   background: var(--bg-dark);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   color: var(--text-primary); 
   position: fixed; 
   inset: 0; 
@@ -106,7 +110,7 @@ header {
   height: 30px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(88,101,242,0.5);
+  border: 2px solid rgba(124,106,247,0.5);
   cursor: pointer;
   transition: border-color 0.2s, transform 0.2s;
 }
@@ -117,7 +121,7 @@ header {
 }
 
 .ani-user-initials {
-  background: linear-gradient(135deg, #5865F2, #4752C4);
+  background: var(--accent-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,16 +136,16 @@ header {
   color: var(--accent-primary);
   background: none;
   padding: 5px 10px;
-  border: 1px solid rgba(88,101,242,0.35);
+  border: 1px solid rgba(124,106,247,0.35);
   border-radius: 10px;
   cursor: pointer;
-  font-family: inherit;
-  transition: background 0.2s, border-color 0.2s;
+  font-family: 'Inter', sans-serif;
+  transition: background var(--trans), border-color var(--trans);
   white-space: nowrap;
 }
 
 .ani-signin-link:hover {
-  background: rgba(88,101,242,0.12);
+  background: rgba(124,106,247,0.12);
   border-color: var(--accent-primary);
 }
 
@@ -350,8 +354,8 @@ header {
 .ani-input-wrap input::placeholder { color: rgba(255,255,255,0.25); }
 
 .ani-input-wrap input:focus {
-  border-color: rgba(88,101,242,0.6);
-  background: rgba(88,101,242,0.05);
+  border-color: rgba(124,106,247,0.6);
+  background: rgba(124,106,247,0.05);
 }
 
 .ani-name-row { display: none; }
@@ -383,6 +387,91 @@ header {
   transform: none;
 }
 
+/* ── OTP / Verify step ──────────────────────────── */
+.ani-auth-verify,
+.auth-verify {
+  display: none;
+}
+
+.auth-verify-info {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  text-align: center;
+  margin: 0 0 4px;
+  font-family: 'Inter', sans-serif;
+}
+
+.auth-verify-email {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  text-align: center;
+  margin: 0 0 18px;
+  word-break: break-all;
+  font-family: 'Inter', sans-serif;
+}
+
+.auth-otp-single {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  display: block;
+  width: 100%;
+  padding: 16px 12px;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(255,255,255,0.06) !important;
+  background-color: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  border-radius: 14px;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  outline: none !important;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.auth-otp-single::placeholder {
+  color: rgba(255,255,255,0.2) !important;
+  -webkit-text-fill-color: rgba(255,255,255,0.2) !important;
+  letter-spacing: 10px;
+}
+
+.auth-otp-single:focus {
+  border-color: rgba(124,106,247,0.8) !important;
+  background: rgba(124,106,247,0.08) !important;
+  background-color: rgba(124,106,247,0.08) !important;
+  box-shadow: 0 0 0 3px rgba(124,106,247,0.18);
+}
+
+.auth-resend-btn {
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  color: rgba(255,255,255,0.35);
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  padding: 8px;
+  width: 100%;
+  text-align: center;
+  transition: color 0.2s;
+  margin-top: 2px;
+}
+
+.auth-resend-btn:hover:not(:disabled) {
+  color: rgba(255,255,255,0.7);
+}
+
+.auth-resend-btn:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
 /* ===============================
    CHAT BOX
    =============================== */
@@ -410,16 +499,16 @@ header {
     color: var(--accent-primary);
     text-decoration: none;
     font-weight: 600;
-    border-bottom: 1px solid rgba(88, 101, 242, 0.3);
+    border-bottom: 1px solid rgba(124, 106, 247, 0.3);
     transition: all 0.2s;
 }
 
 .clean-link:hover {
-    background: rgba(88, 101, 242, 0.15);
+    background: rgba(124, 106, 247, 0.15);
     border-bottom-color: var(--accent-primary);
     border-radius: 4px;
     padding: 0 3px;
-    margin: 0 -3px; /* Counteract padding so text doesn't jump */
+    margin: 0 -3px;
 }
 
 /* Fix lists inside bot messages */
@@ -442,7 +531,7 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 4px 8px 4px 12px;
-    background: rgba(88, 101, 242, 0.15);
+    background: rgba(124, 106, 247, 0.12);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     gap: 8px;
 }
@@ -575,11 +664,11 @@ header {
 .inline-code {
     font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
     font-size: 0.88em;
-    background: rgba(88, 101, 242, 0.15);
-    color: #a5b4fc;
+    background: rgba(124, 106, 247, 0.12);
+    color: #a78bfa;
     padding: 2px 6px;
     border-radius: 5px;
-    border: 1px solid rgba(88, 101, 242, 0.2);
+    border: 1px solid rgba(124, 106, 247, 0.2);
 }
 
 /* --- LOADING DOTS --- */
@@ -617,7 +706,7 @@ textarea {
   font-family: inherit;
 }
 
-textarea:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(88, 101, 242, 0.6); }
+textarea:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(124, 106, 247, 0.6); }
 
 #send-btn {
   width: 42px; height: 42px; flex-shrink: 0;
@@ -648,7 +737,7 @@ textarea:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(88, 10
   textarea:focus { background: #ffffff; border-color: var(--accent-primary); }
   
   /* Make bold text darker in light mode */
-  .bot b { color: #4752C4; }
+  .bot b { color: #5b48d9; }
 }
 
 /* ── Profile Panel ──────────────────────────────── */
@@ -730,7 +819,7 @@ textarea:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(88, 10
   border-radius: 50%;
   margin: 0 auto 10px;
   overflow: hidden;
-  border: 3px solid rgba(88,101,242,0.45);
+  border: 3px solid rgba(124,106,247,0.45);
 }
 
 .ani-profile-big-avatar img {
@@ -746,7 +835,7 @@ textarea:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(88, 10
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #5865F2, #4752C4);
+  background: var(--accent-gradient);
   color: #fff;
   font-size: 26px;
   font-weight: 700;
@@ -804,7 +893,7 @@ textarea:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(88, 10
 }
 
 .ani-profile-input:focus {
-  border-color: rgba(88,101,242,0.7) !important;
+  border-color: rgba(124,106,247,0.7) !important;
 }
 
 .ani-profile-preview {
@@ -817,7 +906,7 @@ textarea:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(88, 10
   height: 52px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(88,101,242,0.4);
+  border: 2px solid rgba(124,106,247,0.4);
 }
 
 .ani-profile-save-btn {
@@ -826,7 +915,7 @@ textarea:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(88, 10
   padding: 14px;
   border: none !important;
   border-radius: 14px;
-  background: linear-gradient(135deg, #5865F2, #4752C4);
+  background: var(--accent-gradient);
   color: #fff;
   font-size: 15px;
   font-weight: 600;
