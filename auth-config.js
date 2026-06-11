@@ -13,7 +13,7 @@ import {
 
 const firebaseConfig = {
   apiKey: "AIzaSyBN64PEinjJ9bTb-vi4ziHm3giN0gYAdnk",
-  authDomain: "ani-ai-2151d.firebaseapp.com",
+  authDomain: "mritunjoy.online",
   projectId: "ani-ai-2151d",
   storageBucket: "ani-ai-2151d.firebasestorage.app",
   messagingSenderId: "941177544986",
