@@ -391,8 +391,8 @@
         } else {
           // Send OTP first — create account only after verification
           const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error);
+          let data = {}; try { data = await res.json(); } catch (_) {}
+          if (!res.ok) throw new Error(data.error || (res.status === 404 ? 'Verification service unavailable. Please try again later.' : `Server error (${res.status}).`));
           pendingSignup = { email, password, name, token: data.token };
           document.getElementById('auth-verify-email').textContent = email;
           setMode('verify');
@@ -416,8 +416,8 @@
       verifyBtn.disabled = true;
       try {
         const res  = await fetch('/api/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email, code, token: pendingSignup.token }) });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
+        let data = {}; try { data = await res.json(); } catch (_) {}
+        if (!res.ok) throw new Error(data.error || (res.status === 404 ? 'Verification service unavailable. Please try again later.' : `Server error (${res.status}).`));
         await signUpWithEmail(pendingSignup.email, pendingSignup.password, pendingSignup.name);
         closeModal();
       } catch (e) {
@@ -434,8 +434,8 @@
       clearError();
       try {
         const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email }) });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
+        let data = {}; try { data = await res.json(); } catch (_) {}
+        if (!res.ok) throw new Error(data.error || (res.status === 404 ? 'Verification service unavailable. Please try again later.' : `Server error (${res.status}).`));
         pendingSignup.token = data.token;
         clearOTP(); otpInput.focus();
         startResendCooldown();
