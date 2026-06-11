@@ -70,9 +70,45 @@
       </div>
     </div>
 
+    <!-- Profile Panel -->
+    <div class="ani-profile-overlay" id="ani-profile-overlay">
+      <div class="ani-profile-panel">
+        <div class="ani-profile-header">
+          <h3>Your Profile</h3>
+          <button class="ani-profile-close" id="ani-profile-close">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="ani-profile-avatar-area">
+          <div class="ani-profile-big-avatar" id="ani-profile-big-avatar"></div>
+          <p class="ani-profile-email-display" id="ani-profile-email-display"></p>
+        </div>
+
+        <div class="ani-profile-fields">
+          <label class="ani-profile-label">Display Name</label>
+          <input class="ani-profile-input" id="ani-profile-name-input" type="text" placeholder="Your name" maxlength="40" autocomplete="name">
+
+          <label class="ani-profile-label">Photo URL <span class="ani-profile-label-note">(paste any image link)</span></label>
+          <input class="ani-profile-input" id="ani-profile-photo-input" type="url" placeholder="https://...">
+
+          <div class="ani-profile-preview" id="ani-profile-preview" style="display:none">
+            <img id="ani-profile-preview-img" src="" alt="preview">
+          </div>
+        </div>
+
+        <button class="ani-profile-save-btn" id="ani-profile-save-btn">Save Changes</button>
+        <div class="ani-profile-msg" id="ani-profile-msg"></div>
+        <button class="ani-profile-signout-btn" id="ani-profile-signout-btn">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Sign Out
+        </button>
+      </div>
+    </div>
+
     <script src="main.js"></script>
     <script type="module">
-      import { signInWithGoogle, signInWithGitHub, signInWithEmail, signUpWithEmail, signOut, onAuthChange, getIdToken } from '/auth.js';
+      import { signInWithGoogle, signInWithGitHub, signInWithEmail, signUpWithEmail, signOut, onAuthChange, getIdToken, updateUserProfile } from '/auth.js';
 
       window.getAniIdToken = () => getIdToken();
 
@@ -232,6 +268,68 @@
         return user.email ? user.email[0].toUpperCase() : '?';
       }
 
+      // ── Profile Panel ─────────────────────────────────
+      const profileOverlay    = document.getElementById('ani-profile-overlay');
+      const profileClose      = document.getElementById('ani-profile-close');
+      const profileNameInput  = document.getElementById('ani-profile-name-input');
+      const profilePhotoInput = document.getElementById('ani-profile-photo-input');
+      const profileSaveBtn    = document.getElementById('ani-profile-save-btn');
+      const profileSignoutBtn = document.getElementById('ani-profile-signout-btn');
+      const profileMsg        = document.getElementById('ani-profile-msg');
+      const profilePreview    = document.getElementById('ani-profile-preview');
+      const profilePreviewImg = document.getElementById('ani-profile-preview-img');
+      const profileBigAvatar  = document.getElementById('ani-profile-big-avatar');
+      const profileEmailEl    = document.getElementById('ani-profile-email-display');
+
+      function openProfilePanel(user) {
+        profileNameInput.value  = user.displayName || '';
+        profilePhotoInput.value = user.photoURL || '';
+        profileEmailEl.textContent = user.email || '';
+        const initials = getInitials(user);
+        profileBigAvatar.innerHTML = user.photoURL
+          ? `<img src="${user.photoURL}" alt="" referrerpolicy="no-referrer">`
+          : `<div class="ani-profile-initials">${initials}</div>`;
+        profilePreview.style.display = user.photoURL ? '' : 'none';
+        if (user.photoURL) profilePreviewImg.src = user.photoURL;
+        profileMsg.textContent = '';
+        profileMsg.className = 'ani-profile-msg';
+        profileOverlay.classList.add('open');
+      }
+
+      function closeProfilePanel() { profileOverlay.classList.remove('open'); }
+
+      profileClose.addEventListener('click', closeProfilePanel);
+      profileOverlay.addEventListener('click', e => { if (e.target === profileOverlay) closeProfilePanel(); });
+
+      profilePhotoInput.addEventListener('input', () => {
+        const url = profilePhotoInput.value.trim();
+        if (url) { profilePreviewImg.src = url; profilePreview.style.display = ''; }
+        else      { profilePreview.style.display = 'none'; }
+      });
+
+      profileSaveBtn.addEventListener('click', async () => {
+        profileSaveBtn.disabled = true;
+        profileMsg.textContent = '';
+        try {
+          await updateUserProfile({
+            displayName: profileNameInput.value.trim() || null,
+            photoURL:    profilePhotoInput.value.trim() || null,
+          });
+          profileMsg.textContent = '✓ Profile updated!';
+          profileMsg.className = 'ani-profile-msg success';
+          setTimeout(closeProfilePanel, 1200);
+        } catch (e) {
+          profileMsg.textContent = e.message || 'Failed to update.';
+          profileMsg.className = 'ani-profile-msg error';
+        } finally { profileSaveBtn.disabled = false; }
+      });
+
+      profileSignoutBtn.addEventListener('click', async () => {
+        closeProfilePanel();
+        await signOut();
+      });
+
+      // ── Auth State ────────────────────────────────────
       onAuthChange(user => {
         const slot = document.getElementById('ani-user-slot');
         if (user) {
@@ -240,15 +338,12 @@
           if (!slot) return;
           const initials = getInitials(user);
           slot.innerHTML = `
-            <div class="ani-user-info">
+            <div class="ani-user-info" title="Edit profile">
               ${user.photoURL
-                ? `<img src="${user.photoURL}" class="ani-user-avatar" alt="${name}" title="Sign out of ${name}" referrerpolicy="no-referrer">`
-                : `<div class="ani-user-avatar ani-user-initials" title="Sign out of ${name}">${initials}</div>`}
-              <span class="ani-chatting-as">Chatting as: <strong>${name}</strong></span>
+                ? `<img src="${user.photoURL}" class="ani-user-avatar" alt="${name}" referrerpolicy="no-referrer">`
+                : `<div class="ani-user-avatar ani-user-initials">${initials}</div>`}
             </div>`;
-          slot.querySelector('.ani-user-avatar').addEventListener('click', async () => {
-            if (confirm(`Sign out of ${name}?`)) await signOut();
-          });
+          slot.querySelector('.ani-user-avatar').addEventListener('click', () => openProfilePanel(user));
         } else {
           openModal(true);
           if (!slot) return;

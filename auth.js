@@ -57,3 +57,9 @@ export async function getIdToken() {
   if (!user) return null;
   return user.getIdToken();
 }
+
+export async function updateUserProfile(updates) {
+  const user = auth.currentUser;
+  if (!user) throw new Error('Not signed in.');
+  return updateProfile(user, updates);
+}
