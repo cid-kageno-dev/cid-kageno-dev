@@ -208,8 +208,9 @@
           await signUpWithEmail(pendingSignup.email, pendingSignup.password, pendingSignup.name);
           forceClose();
         } catch (e) {
-          showErr(e.message.replace('Firebase: ', '').replace(/\(auth\/[\w-]+\)\.?/, '').trim());
-          clearOTP(); otpBoxes[0].focus();
+          const msg = (e.message || '').replace('Firebase: ', '').replace(/\(auth\/[\w-]+\)\.?/, '').trim();
+          showErr(msg && msg !== 'Error' ? msg : 'Verification failed. Please resend the code and try again.');
+          clearOTP(); otpInput.focus();
         } finally { verifyBtn.disabled = false; }
       });
 
