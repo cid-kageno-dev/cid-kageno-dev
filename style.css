@@ -1146,31 +1146,6 @@ section {
   color: #f87171;
 }
 
-/* ─── Nav Auth Button ────────────────────────────────── */
-.nav-auth-btn {
-  background: rgba(124,106,247,0.15);
-  border: 1px solid rgba(124,106,247,0.35);
-  color: #a99ff8;
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 7px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: background var(--trans), border-color var(--trans), color var(--trans), transform var(--trans);
-  white-space: nowrap;
-  max-width: 130px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.nav-auth-btn:hover {
-  background: rgba(124,106,247,0.28);
-  border-color: rgba(124,106,247,0.6);
-  color: #fff;
-  transform: translateY(-1px);
-}
-
 /* ─── Auth Modal ─────────────────────────────────────── */
 .auth-overlay {
   position: fixed;
