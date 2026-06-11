@@ -1,9 +1,10 @@
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 var firebaseConfig = {
-  apiKey:            "AIzaSyAxyBAXzN9hiNjr5dx50I9xrrtImVEbD6k",
-  authDomain:        "gen-lang-client-0109922552.firebaseapp.com",
-  databaseURL:       "https://gen-lang-client-0109922552-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:         "gen-lang-client-0109922552",
-  storageBucket:     "gen-lang-client-0109922552.firebasestorage.app",
-  messagingSenderId: "855156398200",
-  appId:             "1:855156398200:web:8efc43c8e434263ea5358d"
+  apiKey: "AIzaSyBN64PEinjJ9bTb-vi4ziHm3giN0gYAdnk",
+  authDomain: "ani-ai-2151d.firebaseapp.com",
+  projectId: "ani-ai-2151d",
+  storageBucket: "ani-ai-2151d.firebasestorage.app",
+  messagingSenderId: "941177544986",
+  appId: "1:941177544986:web:8e87be4cba03a2bf834ca3",
+  measurementId: "G-2RK6M9T0NE"
 };
