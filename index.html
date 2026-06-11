@@ -238,14 +238,7 @@
       <div class="auth-verify" id="auth-verify">
         <p class="auth-verify-info">We sent a 6-digit code to</p>
         <p class="auth-verify-email" id="auth-verify-email"></p>
-        <div class="auth-otp-row" id="auth-otp-row">
-          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
-          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
-          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
-          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
-          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
-          <input class="auth-otp-box" type="text" maxlength="1" inputmode="numeric" autocomplete="off">
-        </div>
+        <input class="auth-otp-single" id="auth-otp-input" type="text" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="000000" autocomplete="one-time-code">
         <button class="auth-submit-btn" id="auth-otp-submit" type="button">Verify Email</button>
         <button class="auth-resend-btn" id="auth-resend" type="button">Resend code</button>
       </div>
@@ -307,31 +300,13 @@
     let pendingSignup  = null;
     let resendTimer    = null;
 
-    // ── OTP boxes: auto-advance, backspace, paste ───────
-    const otpBoxes = [...document.querySelectorAll('#auth-otp-row .auth-otp-box')];
-    otpBoxes.forEach((box, i) => {
-      box.addEventListener('input', () => {
-        box.value = box.value.replace(/\D/g, '').slice(-1);
-        box.classList.toggle('filled', !!box.value);
-        if (box.value && i < otpBoxes.length - 1) otpBoxes[i + 1].focus();
-      });
-      box.addEventListener('keydown', e => {
-        if (e.key === 'Backspace' && !box.value && i > 0) otpBoxes[i - 1].focus();
-      });
-      box.addEventListener('paste', e => {
-        e.preventDefault();
-        const digits = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
-        otpBoxes.forEach((b, j) => { b.value = digits[j] || ''; b.classList.toggle('filled', !!b.value); });
-        otpBoxes[Math.min(digits.length, otpBoxes.length - 1)].focus();
-      });
+    const otpInput = document.getElementById('auth-otp-input');
+    otpInput.addEventListener('input', () => {
+      otpInput.value = otpInput.value.replace(/\D/g, '').slice(0, 6);
     });
 
-    function getOTPCode() {
-      return otpBoxes.map(b => b.value).join('');
-    }
-    function clearOTP() {
-      otpBoxes.forEach(b => { b.value = ''; b.classList.remove('filled'); });
-    }
+    function getOTPCode() { return otpInput.value.trim(); }
+    function clearOTP()   { otpInput.value = ''; }
 
     function startResendCooldown() {
       const btn = document.getElementById('auth-resend');

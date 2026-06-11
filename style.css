@@ -1439,42 +1439,38 @@ section {
   font-weight: 600;
   color: #7c6af7;
   text-align: center;
-  margin: 0 0 24px;
+  margin: 0 0 20px;
   word-break: break-all;
 }
 
-.auth-otp-row {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.auth-otp-box {
-  width: 46px;
-  height: 54px;
+.auth-otp-single {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 14px;
   text-align: center;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 700;
+  letter-spacing: 10px;
   font-family: 'JetBrains Mono', monospace;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 12px;
+  border-radius: 14px;
   color: #ffffff;
   outline: none;
+  box-sizing: border-box;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-  caret-color: transparent;
 }
 
-.auth-otp-box:focus {
+.auth-otp-single::placeholder {
+  color: rgba(255,255,255,0.15);
+  letter-spacing: 10px;
+}
+
+.auth-otp-single:focus {
   border-color: rgba(124,106,247,0.7);
   background: rgba(124,106,247,0.06);
   box-shadow: 0 0 0 3px rgba(124,106,247,0.15);
-}
-
-.auth-otp-box.filled {
-  border-color: rgba(124,106,247,0.4);
-  color: #a89ff7;
 }
 
 .auth-resend-btn {
