@@ -43,6 +43,12 @@ export async function signOut() {
 }
 
 export function onAuthChange(callback) {
+  // Fire immediately with the current session so the UI doesn't wait for the async event
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    callback(session?.user ?? null, session);
+  });
+
+  // Then keep listening for sign-in / sign-out events
   supabase.auth.onAuthStateChange((_event, session) => {
     callback(session?.user ?? null, session);
   });
