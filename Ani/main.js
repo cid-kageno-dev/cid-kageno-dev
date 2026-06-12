@@ -156,13 +156,16 @@ if (viewport) {
 /* ====================================
    CHAT HISTORY (Supabase)
    ==================================== */
+const _SB_URL = 'https://uclgpxitnhzuftqulmrn.supabase.co';
+const _SB_KEY = 'sb_publishable_FxHFy0geZAUmZi-0yJ8AcA_-1hX4h1m';
+
 let _sbClient = null;
 
-async function getSupabase() {
-  if (_sbClient) return _sbClient;
-  const { supabaseUrl, supabaseKey } = await fetch('/api/config').then(r => r.json());
-  _sbClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-  return _sbClient;
+function getSupabase() {
+  if (!_sbClient) {
+    _sbClient = window._supabase || window.supabase.createClient(_SB_URL, _SB_KEY);
+  }
+  return Promise.resolve(_sbClient);
 }
 
 // Called by the auth module (index.html) when a user signs in

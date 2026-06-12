@@ -1,24 +1,19 @@
 /**
  * supabase-client.js — Supabase Auth adapter
  * Uses the Supabase UMD global (window.supabase) loaded in HTML.
- * Credentials are fetched from /api/config (server injects env vars).
  */
 
-let _client  = null;
-let _promise = null;
+const SUPABASE_URL = 'https://uclgpxitnhzuftqulmrn.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_FxHFy0geZAUmZi-0yJ8AcA_-1hX4h1m';
 
-async function getClient() {
-  if (_client) return _client;
-  if (!_promise) {
-    _promise = fetch('/api/config')
-      .then(r => r.json())
-      .then(({ supabaseUrl, supabaseKey }) => {
-        _client = window.supabase.createClient(supabaseUrl, supabaseKey);
-        window._supabase = _client;
-        return _client;
-      });
+let _client = null;
+
+function getClient() {
+  if (!_client) {
+    _client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    window._supabase = _client;
   }
-  return _promise;
+  return Promise.resolve(_client);
 }
 
 function buildUser(session) {
