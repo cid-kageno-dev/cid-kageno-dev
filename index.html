@@ -273,49 +273,65 @@
       CSS: '🎨', Shell: '🖥️', Go: '🐹', Rust: '🦀', default: '💻'
     };
 
-    fetch('/api/github-repos')
-      .then(r => r.json())
-      .then(repos => {
-        grid.innerHTML = '';
-        if (!Array.isArray(repos)) {
-          grid.innerHTML = '<p class="loading-placeholder" style="color:#f87171;">GitHub user not found.</p>';
-          return;
-        }
+    const CACHE_KEY = 'gh_repos_cache';
+    const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
-        const validRepos = repos.filter(r => !r.fork).slice(0, 6);
-        repoCountEl.textContent = repos.filter(r => !r.fork).length || '—';
+    function renderRepos(repos) {
+      grid.innerHTML = '';
+      if (!Array.isArray(repos)) {
+        grid.innerHTML = '<p class="loading-placeholder" style="color:#f87171;">GitHub user not found.</p>';
+        return;
+      }
 
-        if (validRepos.length === 0) {
-          grid.innerHTML = '<p class="loading-placeholder">No public projects found yet.</p>';
-          return;
-        }
+      const validRepos = repos.filter(r => !r.fork).slice(0, 6);
+      repoCountEl.textContent = repos.filter(r => !r.fork).length || '—';
 
-        validRepos.forEach((repo, i) => {
-          const icon = langIcons[repo.language] || langIcons.default;
-          const card = document.createElement('div');
-          card.className = `card project-card reveal reveal-delay-${(i % 3) + 1}`;
-          card.innerHTML = `
-            <div class="project-card-top">
-              <div class="project-icon">${icon}</div>
-              <h3 class="project-name">${repo.name}</h3>
-              <p class="project-desc">${repo.description || 'No description provided.'}</p>
-            </div>
-            <div class="project-footer">
-              <span class="lang-badge">${repo.language || 'Code'}</span>
-              <a href="${repo.html_url}" target="_blank" class="btn btn-ghost btn-sm">
-                View Code
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </a>
-            </div>
-          `;
-          grid.appendChild(card);
-          // Re-observe new cards
-          observer.observe(card);
-        });
-      })
-      .catch(() => {
-        grid.innerHTML = '<p class="loading-placeholder" style="color:#f87171;">Failed to load projects.</p>';
+      if (validRepos.length === 0) {
+        grid.innerHTML = '<p class="loading-placeholder">No public projects found yet.</p>';
+        return;
+      }
+
+      validRepos.forEach((repo, i) => {
+        const icon = langIcons[repo.language] || langIcons.default;
+        const card = document.createElement('div');
+        card.className = `card project-card reveal reveal-delay-${(i % 3) + 1}`;
+        card.innerHTML = `
+          <div class="project-card-top">
+            <div class="project-icon">${icon}</div>
+            <h3 class="project-name">${repo.name}</h3>
+            <p class="project-desc">${repo.description || 'No description provided.'}</p>
+          </div>
+          <div class="project-footer">
+            <span class="lang-badge">${repo.language || 'Code'}</span>
+            <a href="${repo.html_url}" target="_blank" class="btn btn-ghost btn-sm">
+              View Code
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        `;
+        grid.appendChild(card);
+        observer.observe(card);
       });
+    }
+
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+      if (cached && Date.now() - cached.ts < CACHE_TTL) {
+        renderRepos(cached.data);
+      } else {
+        throw new Error('stale');
+      }
+    } catch (_) {
+      fetch('/api/github-repos')
+        .then(r => r.json())
+        .then(repos => {
+          try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: repos })); } catch (_) {}
+          renderRepos(repos);
+        })
+        .catch(() => {
+          grid.innerHTML = '<p class="loading-placeholder" style="color:#f87171;">Failed to load projects.</p>';
+        });
+    }
   </script>
 
 </body>
