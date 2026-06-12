@@ -1,81 +1,75 @@
-/* global supabase — loaded via UMD <script> tag in Ani/index.html */
-const { createClient } = window.supabase;
+/**
+ * auth-client.js — Replit Auth adapter
+ * Replaces the old Supabase auth client with session-based Replit Auth.
+ * The server handles all OIDC flows; the browser just reads /api/auth/user.
+ */
 
-const SUPABASE_URL      = 'https://uclgpxitnhzuftqulmrn.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_FxHFy0geZAUmZi-0yJ8AcA_-1hX4h1m';
+let _cachedUser = undefined;
+let _listeners = [];
 
-const _client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+async function _fetchUser() {
+  try {
+    const res = await fetch('/api/auth/user');
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.user || null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function _notify(user) {
+  for (const fn of _listeners) {
+    try { fn(user, null); } catch (_) {}
+  }
+}
 
 export async function signInWithGitHub() {
-  const { data, error } = await _client.auth.signInWithOAuth({
-    provider: 'github',
-    options: {
-      redirectTo: `${location.origin}/Ani/`,
-      skipBrowserRedirect: true,
-    }
-  });
-  if (error) throw error;
-  if (data?.url) {
-    const popup = window.open(data.url, '_blank', 'noopener,noreferrer');
-    if (!popup) {
-      // Popup was blocked — return the URL so the caller can show a fallback
-      return data.url;
-    }
-  }
+  window.location.href = '/api/login';
   return null;
 }
 
 export async function signOut() {
-  const { error } = await _client.auth.signOut();
-  if (error) throw error;
+  _cachedUser = null;
+  _notify(null);
+  window.location.href = '/api/logout';
 }
 
 export function onAuthChange(callback) {
-  _client.auth.getSession().then(({ data: { session }, error }) => {
-    if (error) console.error('[supabase] getSession error:', error);
-    callback(session?.user ?? null, session);
-  }).catch(err => console.error('[supabase] getSession threw:', err));
+  _listeners.push(callback);
 
-  _client.auth.onAuthStateChange((event, session) => {
-    console.log('[supabase] auth event:', event, session?.user?.email ?? 'no user');
-    callback(session?.user ?? null, session);
-  });
+  // Fire immediately with current state
+  if (_cachedUser !== undefined) {
+    callback(_cachedUser, null);
+  } else {
+    _fetchUser().then(user => {
+      _cachedUser = user;
+      callback(user, null);
+    });
+  }
 }
 
-// Returns any OAuth error embedded in the current URL hash/query
-export function getOAuthError() {
-  const hash  = new URLSearchParams(location.hash.slice(1));
-  const query = new URLSearchParams(location.search);
-  const desc  = hash.get('error_description') || query.get('error_description');
-  const code  = hash.get('error_code')        || query.get('error_code');
-  const err   = hash.get('error')             || query.get('error');
-  if (!err && !desc) return null;
-  return desc || code || err;
-}
-
+// No-op: Replit Auth tokens are server-side cookies — no browser token to return
 export async function getAccessToken() {
-  const { data: { session } } = await _client.auth.getSession();
-  return session?.access_token ?? null;
+  return null;
 }
 
-export async function updateUserProfile(updates) {
-  const { error } = await _client.auth.updateUser({
-    data: {
-      ...(updates.displayName != null && { full_name: updates.displayName }),
-      ...(updates.photoURL    != null && { avatar_url: updates.photoURL }),
-    }
-  });
-  if (error) throw error;
+// Profile updates are not supported via OIDC without a separate API
+export async function updateUserProfile(_updates) {
+  // No-op for Replit Auth — profile is managed by Replit
 }
 
 export function getUserDisplayName(user) {
-  return user?.user_metadata?.full_name
-      || user?.user_metadata?.name
-      || (user?.email ? user.email.split('@')[0] : 'User');
+  if (!user) return 'User';
+  return user.name || (user.email ? user.email.split('@')[0] : 'User');
 }
 
 export function getUserAvatarUrl(user) {
-  return user?.user_metadata?.avatar_url
-      || user?.user_metadata?.picture
-      || null;
+  return user?.picture || null;
+}
+
+export function getOAuthError() {
+  const query = new URLSearchParams(location.search);
+  const err   = query.get('error') || query.get('error_description');
+  return err || null;
 }
