@@ -154,6 +154,48 @@ if (viewport) {
 }
 
 /* ====================================
+   CHAT HISTORY (localStorage)
+   ==================================== */
+const HISTORY_KEY = 'ani_chat_history';
+const MAX_HISTORY = 100; // keep last 100 messages
+
+function loadHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+  } catch (_) {
+    return [];
+  }
+}
+
+function saveHistory(messages) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(messages.slice(-MAX_HISTORY)));
+  } catch (_) {}
+}
+
+function clearHistory() {
+  localStorage.removeItem(HISTORY_KEY);
+}
+
+// In-memory copy kept in sync with localStorage
+let chatHistory = loadHistory();
+
+function recordMessage(text, type) {
+  chatHistory.push({ text, type, ts: Date.now() });
+  saveHistory(chatHistory);
+}
+
+function restoreHistory() {
+  if (chatHistory.length === 0) return;
+  // Remove the default greeting that was already added before restore
+  const existing = chatBox.querySelectorAll('.msg');
+  existing.forEach(el => el.remove());
+  for (const { text, type } of chatHistory) {
+    addMessage(text, type, /* persist */ false);
+  }
+}
+
+/* ====================================
    CHAT LOGIC
    ==================================== */
 const autoResize = () => {
@@ -169,7 +211,9 @@ input.addEventListener('input', () => {
 });
 
 // --- UPDATED MESSAGE FUNCTION WITH MARKDOWN PARSER ---
-function addMessage(text, type) {
+// persist=true (default) saves to localStorage; pass false when replaying history
+function addMessage(text, type, persist = true) {
+  if (persist) recordMessage(text, type);
   const div = document.createElement("div");
   div.className = `msg ${type}`;
 
