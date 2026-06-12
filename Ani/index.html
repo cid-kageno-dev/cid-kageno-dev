@@ -108,9 +108,15 @@
 
     <script src="main.js"></script>
     <script type="module">
-      import { signInWithGoogle, signInWithGitHub, signInWithEmail, signUpWithEmail, signOut, onAuthChange, getIdToken, updateUserProfile } from '/auth-config.js';
+      import {
+        signInWithGoogle, signInWithGitHub,
+        signInWithEmail, signUpWithEmail,
+        signOut, onAuthChange,
+        getAccessToken, updateUserProfile,
+        getUserDisplayName, getUserAvatarUrl
+      } from '/supabase-client.js';
 
-      window.getAniIdToken = () => getIdToken();
+      window.getAniIdToken = () => getAccessToken();
 
       const overlay   = document.getElementById('ani-auth-overlay');
       const closeBtn  = document.getElementById('ani-auth-close');
@@ -125,8 +131,8 @@
       const orText    = document.querySelector('.ani-auth-or');
       const tabsDiv   = document.querySelector('.ani-auth-tabs');
 
-      let mode         = 'signin';
-      let isGated      = false;
+      let mode          = 'signin';
+      let isGated       = false;
       let pendingSignup = null;
       let resendTimer   = null;
 
@@ -191,33 +197,27 @@
       tabIn.addEventListener('click', () => setMode('signin'));
       tabUp.addEventListener('click', () => setMode('signup'));
 
-      function firebaseMsg(err) {
-        const raw = err.message || '';
-        const codeMatch = raw.match(/\(auth\/([\w-]+)\)/);
-        const fbCode = codeMatch ? codeMatch[1] : '';
-        return {
-          'user-not-found':       'No account found with that email.',
-          'wrong-password':       'Incorrect password.',
-          'invalid-credential':   'Incorrect email or password.',
-          'email-already-in-use': 'That email already has an account. Try signing in instead.',
-          'weak-password':        'Password must be at least 6 characters.',
-          'invalid-email':        'That email address isn\'t valid.',
-          'too-many-requests':    'Too many attempts. Please wait a moment and try again.',
-          'popup-closed-by-user': 'Sign-in popup was closed. Please try again.',
-          'account-exists-with-different-credential': 'An account already exists with this email using a different sign-in method.',
-        }[fbCode] || raw.replace('Firebase: ', '').replace(/\s*\(auth\/[\w-]+\)\.?/, '').trim() || 'Something went wrong. Please try again.';
+      function authMsg(err) {
+        const msg = err?.message || '';
+        if (msg.includes('Invalid login credentials'))   return 'Incorrect email or password.';
+        if (msg.includes('User already registered'))     return 'That email already has an account. Try signing in instead.';
+        if (msg.includes('Password should be at least')) return 'Password must be at least 6 characters.';
+        if (msg.includes('Unable to validate email'))    return "That email address isn't valid.";
+        if (msg.includes('Email rate limit'))            return 'Too many attempts. Please wait a moment and try again.';
+        if (msg.includes('cancelled') || msg.includes('popup')) return 'Sign-in was cancelled. Please try again.';
+        return msg || 'Something went wrong. Please try again.';
       }
 
       document.getElementById('ani-btn-google').addEventListener('click', async () => {
         clearErr();
-        try { await signInWithGoogle(); forceClose(); }
-        catch (e) { showErr(firebaseMsg(e)); }
+        try { await signInWithGoogle(); }
+        catch (e) { showErr(authMsg(e)); }
       });
 
       document.getElementById('ani-btn-github').addEventListener('click', async () => {
         clearErr();
-        try { await signInWithGitHub(); forceClose(); }
-        catch (e) { showErr(firebaseMsg(e)); }
+        try { await signInWithGitHub(); }
+        catch (e) { showErr(authMsg(e)); }
       });
 
       form.addEventListener('submit', async e => {
@@ -235,7 +235,7 @@
           } else {
             const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
             let data = {}; try { data = await res.json(); } catch (_) {}
-            if (!res.ok) throw new Error(data.error || (res.status === 404 ? 'Verification service unavailable. Please try again later.' : `Server error (${res.status}).`));
+            if (!res.ok) throw new Error(data.error || (res.status === 404 ? 'Verification service unavailable.' : `Server error (${res.status}).`));
             pendingSignup = { email, password: pass, name, token: data.token };
             document.getElementById('ani-verify-email').textContent = email;
             setMode('verify');
@@ -244,7 +244,7 @@
             startResendCooldown();
           }
         } catch (e) {
-          showErr(firebaseMsg(e));
+          showErr(authMsg(e));
         } finally { submitBtn.disabled = false; }
       });
 
@@ -255,30 +255,26 @@
         const verifyBtn = document.getElementById('ani-otp-submit');
         verifyBtn.disabled = true;
         try {
-          // Step 1: verify the OTP code
+          // Step 1: verify the OTP via our server
           const res  = await fetch('/api/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email, code, token: pendingSignup.token }) });
           let data = {}; try { data = await res.json(); } catch (_) {}
           if (!res.ok) {
-            const err = data.error || (res.status === 404 ? 'Verification service unavailable.' : `Server error (${res.status}).`);
-            showErr(err);
+            showErr(data.error || (res.status === 404 ? 'Verification service unavailable.' : `Server error (${res.status}).`));
             clearOTP(); otpInput.focus();
             return;
           }
-          // Step 2: OTP passed — create the Firebase account
+          // Step 2: OTP passed — create Supabase account
           try {
-            await signUpWithEmail(pendingSignup.email, pendingSignup.password, pendingSignup.name);
-            forceClose();
-          } catch (fbErr) {
-            const raw = fbErr.message || '';
-            const codeMatch = raw.match(/\(auth\/([\w-]+)\)/);
-            const fbCode = codeMatch ? codeMatch[1] : '';
-            const friendly = {
-              'email-already-in-use': 'That email already has an account. Try signing in instead.',
-              'weak-password':        'Password must be at least 6 characters.',
-              'invalid-email':        'That email address isn\'t valid.',
-              'operation-not-allowed':'Email sign-up is not enabled. Contact the site owner.',
-            }[fbCode] || raw.replace('Firebase: ', '').replace(/\s*\(auth\/[\w-]+\)\.?/, '').trim() || 'Account creation failed. Please try again.';
-            showErr(friendly);
+            const { session } = await signUpWithEmail(pendingSignup.email, pendingSignup.password, pendingSignup.name);
+            if (session) {
+              forceClose();
+            } else {
+              // Supabase "Confirm email" is ON — user must click the link Supabase sends
+              showErr('Account created! Check your inbox for a confirmation link, then sign in.');
+              setMode('signin');
+            }
+          } catch (sbErr) {
+            showErr(authMsg(sbErr));
           }
         } finally { verifyBtn.disabled = false; }
       });
@@ -289,7 +285,7 @@
         try {
           const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email }) });
           let data = {}; try { data = await res.json(); } catch (_) {}
-          if (!res.ok) throw new Error(data.error || (res.status === 404 ? 'Verification service unavailable. Please try again later.' : `Server error (${res.status}).`));
+          if (!res.ok) throw new Error(data.error || (res.status === 404 ? 'Verification service unavailable.' : `Server error (${res.status}).`));
           pendingSignup.token = data.token;
           clearOTP(); otpInput.focus();
           startResendCooldown();
@@ -297,11 +293,11 @@
       });
 
       function getInitials(user) {
-        if (user.displayName) return user.displayName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-        return user.email ? user.email[0].toUpperCase() : '?';
+        const name = getUserDisplayName(user);
+        return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
       }
 
-      // ── Profile Panel ─────────────────────────────────
+      // ── Profile Panel ──────────────────────────────────────────────────
       const profileOverlay    = document.getElementById('ani-profile-overlay');
       const profileClose      = document.getElementById('ani-profile-close');
       const profileNameInput  = document.getElementById('ani-profile-name-input');
@@ -315,15 +311,17 @@
       const profileEmailEl    = document.getElementById('ani-profile-email-display');
 
       function openProfilePanel(user) {
-        profileNameInput.value  = user.displayName || '';
-        profilePhotoInput.value = user.photoURL || '';
+        const displayName = getUserDisplayName(user);
+        const avatarUrl   = getUserAvatarUrl(user);
+        profileNameInput.value     = displayName;
+        profilePhotoInput.value    = avatarUrl || '';
         profileEmailEl.textContent = user.email || '';
         const initials = getInitials(user);
-        profileBigAvatar.innerHTML = user.photoURL
-          ? `<img src="${user.photoURL}" alt="" referrerpolicy="no-referrer">`
+        profileBigAvatar.innerHTML = avatarUrl
+          ? `<img src="${avatarUrl}" alt="" referrerpolicy="no-referrer">`
           : `<div class="ani-profile-initials">${initials}</div>`;
-        profilePreview.style.display = user.photoURL ? '' : 'none';
-        if (user.photoURL) profilePreviewImg.src = user.photoURL;
+        profilePreview.style.display = avatarUrl ? '' : 'none';
+        if (avatarUrl) profilePreviewImg.src = avatarUrl;
         profileMsg.textContent = '';
         profileMsg.className = 'ani-profile-msg';
         profileOverlay.classList.add('open');
@@ -362,18 +360,19 @@
         await signOut();
       });
 
-      // ── Auth State ────────────────────────────────────
-      onAuthChange(user => {
+      // ── Auth State ─────────────────────────────────────────────────────
+      onAuthChange((user, _session) => {
         const slot = document.getElementById('ani-user-slot');
         if (user) {
           forceClose();
-          const name = user.displayName || user.email.split('@')[0];
+          const name      = getUserDisplayName(user);
+          const avatarUrl = getUserAvatarUrl(user);
           if (!slot) return;
           const initials = getInitials(user);
           slot.innerHTML = `
             <div class="ani-user-info" title="Edit profile">
-              ${user.photoURL
-                ? `<img src="${user.photoURL}" class="ani-user-avatar" alt="${name}" referrerpolicy="no-referrer">`
+              ${avatarUrl
+                ? `<img src="${avatarUrl}" class="ani-user-avatar" alt="${name}" referrerpolicy="no-referrer">`
                 : `<div class="ani-user-avatar ani-user-initials">${initials}</div>`}
             </div>`;
           slot.querySelector('.ani-user-avatar').addEventListener('click', () => openProfilePanel(user));

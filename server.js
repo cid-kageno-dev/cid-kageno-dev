@@ -165,20 +165,20 @@ app.post('/api/chat', async (req, res) => {
     const authHeader = req.headers['authorization'] || '';
     const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
-    const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyAxyBAXzN9hiNjr5dx50I9xrrtImVEbD6k';
-
     if (token) {
       try {
-        const verifyRes = await httpsPost(
-          `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${FIREBASE_API_KEY}`,
-          { idToken: token }
-        );
-        if (verifyRes.status === 200) {
-          const data = JSON.parse(verifyRes.body);
-          const user = data.users && data.users[0];
-          if (user) {
-            userName = user.displayName || (user.email ? user.email.split('@')[0] : 'Guest');
+        const supaRes = await httpsGet(
+          `${process.env.SUPABASE_URL}/auth/v1/user`,
+          {
+            'Authorization': `Bearer ${token}`,
+            'apikey': process.env.SUPABASE_ANON_KEY,
           }
+        );
+        if (supaRes.status === 200) {
+          const data = JSON.parse(supaRes.body);
+          userName = data.user_metadata?.full_name
+                  || data.user_metadata?.name
+                  || (data.email ? data.email.split('@')[0] : 'Guest');
         }
       } catch (_) {}
     }
