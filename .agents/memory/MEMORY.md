@@ -1,1 +1,1 @@
-- [Supabase auth migration](supabase-auth.md) — Firebase replaced with Supabase GitHub-only OAuth; CDN ESM, no build step; modal shown via HTML classes not JS.
+- [Replit Auth OIDC setup](replit-auth-oidc.md) — openid-client v6 (ESM) used via dynamic import() in CJS server.js; PKCE required; session-based, no browser tokens.
