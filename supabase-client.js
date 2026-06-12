@@ -1,4 +1,5 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
+/* global supabase — loaded via UMD <script> tag in Ani/index.html */
+const { createClient } = window.supabase;
 
 const SUPABASE_URL      = 'https://uclgpxitnhzuftqulmrn.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_FxHFy0geZAUmZi-0yJ8AcA_-1hX4h1m';
@@ -15,8 +16,13 @@ export async function signInWithGitHub() {
   });
   if (error) throw error;
   if (data?.url) {
-    window.open(data.url, '_blank', 'noopener,noreferrer');
+    const popup = window.open(data.url, '_blank', 'noopener,noreferrer');
+    if (!popup) {
+      // Popup was blocked — return the URL so the caller can show a fallback
+      return data.url;
+    }
   }
+  return null;
 }
 
 export async function signOut() {
