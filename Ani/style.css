@@ -387,6 +387,35 @@ header {
   transform: none;
 }
 
+.ani-github-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px 20px;
+  background: #24292f;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 11px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  margin-top: 8px;
+}
+.ani-github-btn:hover {
+  background: #32383f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+}
+.ani-github-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ── OTP / Verify step ──────────────────────────── */
 .ani-auth-verify,
 .auth-verify {

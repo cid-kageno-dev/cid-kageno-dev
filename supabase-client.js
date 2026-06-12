@@ -13,42 +13,16 @@ export async function signInWithGitHub() {
   if (error) throw error;
 }
 
-export async function signInWithGoogle() {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: `${location.origin}/Ani/` }
-  });
-  if (error) throw error;
-}
-
-export async function signInWithEmail(email, password) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw error;
-  return data;
-}
-
-export async function signUpWithEmail(email, password, displayName) {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: { data: { full_name: displayName } }
-  });
-  if (error) throw error;
-  return data;
-}
-
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
 }
 
 export function onAuthChange(callback) {
-  // Fire immediately with the current session so the UI doesn't wait for the async event
   supabase.auth.getSession().then(({ data: { session } }) => {
     callback(session?.user ?? null, session);
   });
 
-  // Then keep listening for sign-in / sign-out events
   supabase.auth.onAuthStateChange((_event, session) => {
     callback(session?.user ?? null, session);
   });

@@ -19,54 +19,15 @@
     <!-- Auth Modal -->
     <div class="ani-auth-overlay open gated" id="ani-auth-overlay">
       <div class="ani-auth-modal" role="dialog" aria-modal="true">
-        <button class="ani-auth-close" id="ani-auth-close">✕</button>
-
         <h2 class="ani-auth-title">Welcome Back</h2>
-        <p class="ani-auth-sub">Hey <strong>buddy</strong>, Please enter your details</p>
-
-        <div class="ani-auth-tabs">
-          <button class="ani-auth-tab active" id="ani-tab-signin">Sign In</button>
-          <button class="ani-auth-tab" id="ani-tab-signup">Sign Up</button>
-        </div>
+        <p class="ani-auth-sub">Sign in to chat with <strong>Ani</strong></p>
 
         <div class="ani-auth-error" id="ani-auth-error"></div>
 
-        <div class="ani-auth-social">
-          <button class="ani-auth-icon-btn" id="ani-btn-google" title="Continue with Google">
-            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          </button>
-          <button class="ani-auth-icon-btn" id="ani-btn-github" title="Continue with GitHub">
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-          </button>
-        </div>
-
-        <p class="ani-auth-or">Or continue with email</p>
-
-        <form id="ani-auth-form">
-          <div class="ani-name-row" id="ani-name-row">
-            <div class="ani-input-wrap">
-              <svg class="ani-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              <input type="text" id="ani-auth-name" placeholder="Full name" autocomplete="name">
-            </div>
-          </div>
-          <div class="ani-input-wrap">
-            <svg class="ani-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <input type="email" id="ani-auth-email" placeholder="Email address" autocomplete="email">
-          </div>
-          <div class="ani-input-wrap">
-            <svg class="ani-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-            <input type="password" id="ani-auth-password" placeholder="Password" autocomplete="current-password">
-          </div>
-          <button class="ani-auth-submit" id="ani-auth-submit" type="submit">Continue</button>
-        </form>
-
-        <div class="ani-auth-verify" id="ani-auth-verify">
-          <p class="auth-verify-info">We sent a 6-digit code to</p>
-          <p class="auth-verify-email" id="ani-verify-email"></p>
-          <input class="auth-otp-single" id="ani-otp-input" type="text" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="000000" autocomplete="one-time-code">
-          <button class="ani-auth-submit" id="ani-otp-submit" type="button">Verify Email</button>
-          <button class="auth-resend-btn" id="ani-resend" type="button">Resend code</button>
-        </div>
+        <button class="ani-github-btn" id="ani-btn-github" type="button">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          Continue with GitHub
+        </button>
       </div>
     </div>
 
@@ -109,187 +70,35 @@
     <script src="main.js"></script>
     <script type="module">
       import {
-        signInWithGoogle, signInWithGitHub,
-        signInWithEmail, signUpWithEmail,
-        signOut, onAuthChange,
+        signInWithGitHub, signOut, onAuthChange,
         getAccessToken, updateUserProfile,
         getUserDisplayName, getUserAvatarUrl
       } from '/supabase-client.js';
 
       window.getAniIdToken = () => getAccessToken();
 
-      const overlay   = document.getElementById('ani-auth-overlay');
-      const closeBtn  = document.getElementById('ani-auth-close');
-      const tabIn     = document.getElementById('ani-tab-signin');
-      const tabUp     = document.getElementById('ani-tab-signup');
-      const errBox    = document.getElementById('ani-auth-error');
-      const nameRow   = document.getElementById('ani-name-row');
-      const form      = document.getElementById('ani-auth-form');
-      const submitBtn = document.getElementById('ani-auth-submit');
-      const verifyDiv = document.getElementById('ani-auth-verify');
-      const socialDiv = document.querySelector('.ani-auth-social');
-      const orText    = document.querySelector('.ani-auth-or');
-      const tabsDiv   = document.querySelector('.ani-auth-tabs');
+      const overlay = document.getElementById('ani-auth-overlay');
+      const errBox  = document.getElementById('ani-auth-error');
 
-      let mode          = 'signin';
-      let isGated       = false;
-      let pendingSignup = null;
-      let resendTimer   = null;
-
-      const otpInput = document.getElementById('ani-otp-input');
-      otpInput.addEventListener('input', () => {
-        otpInput.value = otpInput.value.replace(/\D/g, '').slice(0, 6);
-      });
-
-      function getOTPCode() { return otpInput.value.trim(); }
-      function clearOTP()   { otpInput.value = ''; }
-
-      function startResendCooldown() {
-        const btn = document.getElementById('ani-resend');
-        let secs = 60;
-        btn.disabled = true;
-        btn.textContent = `Resend in ${secs}s`;
-        clearInterval(resendTimer);
-        resendTimer = setInterval(() => {
-          secs--;
-          if (secs <= 0) { clearInterval(resendTimer); btn.disabled = false; btn.textContent = 'Resend code'; }
-          else btn.textContent = `Resend in ${secs}s`;
-        }, 1000);
-      }
-
-      function openModal(gated = false) {
-        isGated = gated;
-        overlay.classList.add('open');
-        overlay.classList.toggle('gated', gated);
-        document.getElementById('ani-auth-email').focus();
-      }
-      function closeModal() { if (isGated) return; forceClose(); }
-      function showErr(m)   { errBox.textContent = m; errBox.classList.add('visible'); }
-      function clearErr()   { errBox.classList.remove('visible'); }
-
-      closeBtn.addEventListener('click', closeModal);
-      overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-      function setMode(m) {
-        mode = m;
-        const isVerify = m === 'verify';
-        tabIn.classList.toggle('active', m === 'signin');
-        tabUp.classList.toggle('active', m === 'signup');
-        nameRow.classList.toggle('visible', m === 'signup');
-        form.style.display       = isVerify ? 'none' : '';
-        verifyDiv.style.display  = isVerify ? 'block' : 'none';
-        if (socialDiv) socialDiv.style.display = isVerify ? 'none' : '';
-        if (orText)    orText.style.display    = isVerify ? 'none' : '';
-        if (tabsDiv)   tabsDiv.style.display   = isVerify ? 'none' : '';
-        clearErr();
-      }
+      function showErr(m) { errBox.textContent = m; errBox.classList.add('visible'); }
+      function clearErr() { errBox.classList.remove('visible'); }
 
       function forceClose() {
-        isGated = false;
         overlay.classList.remove('open', 'gated');
-        setMode('signin');
-        pendingSignup = null;
-        clearOTP();
         clearErr();
       }
-
-      tabIn.addEventListener('click', () => setMode('signin'));
-      tabUp.addEventListener('click', () => setMode('signup'));
-
-      function authMsg(err) {
-        const msg = err?.message || '';
-        if (msg.includes('Invalid login credentials'))   return 'Incorrect email or password.';
-        if (msg.includes('User already registered'))     return 'That email already has an account. Try signing in instead.';
-        if (msg.includes('Password should be at least')) return 'Password must be at least 6 characters.';
-        if (msg.includes('Unable to validate email'))    return "That email address isn't valid.";
-        if (msg.includes('Email rate limit'))            return 'Too many attempts. Please wait a moment and try again.';
-        if (msg.includes('cancelled') || msg.includes('popup')) return 'Sign-in was cancelled. Please try again.';
-        return msg || 'Something went wrong. Please try again.';
-      }
-
-      document.getElementById('ani-btn-google').addEventListener('click', async () => {
-        clearErr();
-        try { await signInWithGoogle(); }
-        catch (e) { showErr(authMsg(e)); }
-      });
 
       document.getElementById('ani-btn-github').addEventListener('click', async () => {
         clearErr();
+        const btn = document.getElementById('ani-btn-github');
+        btn.disabled = true;
+        btn.textContent = 'Redirecting…';
         try { await signInWithGitHub(); }
-        catch (e) { showErr(authMsg(e)); }
-      });
-
-      form.addEventListener('submit', async e => {
-        e.preventDefault();
-        const email = document.getElementById('ani-auth-email').value.trim();
-        const pass  = document.getElementById('ani-auth-password').value;
-        const name  = document.getElementById('ani-auth-name').value.trim();
-        clearErr();
-        if (!email || !pass) { showErr('Please enter your email and password.'); return; }
-        submitBtn.disabled = true;
-        try {
-          if (mode === 'signin') {
-            await signInWithEmail(email, pass);
-            forceClose();
-          } else {
-            const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
-            let data = {}; try { data = await res.json(); } catch (_) {}
-            if (!res.ok) throw new Error(data.error || (res.status === 404 ? 'Verification service unavailable.' : `Server error (${res.status}).`));
-            pendingSignup = { email, password: pass, name, token: data.token };
-            document.getElementById('ani-verify-email').textContent = email;
-            setMode('verify');
-            clearOTP();
-            otpInput.focus();
-            startResendCooldown();
-          }
-        } catch (e) {
-          showErr(authMsg(e));
-        } finally { submitBtn.disabled = false; }
-      });
-
-      document.getElementById('ani-otp-submit').addEventListener('click', async () => {
-        const code = getOTPCode();
-        if (code.length < 6) { showErr('Please enter all 6 digits.'); return; }
-        clearErr();
-        const verifyBtn = document.getElementById('ani-otp-submit');
-        verifyBtn.disabled = true;
-        try {
-          // Step 1: verify the OTP via our server
-          const res  = await fetch('/api/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email, code, token: pendingSignup.token }) });
-          let data = {}; try { data = await res.json(); } catch (_) {}
-          if (!res.ok) {
-            showErr(data.error || (res.status === 404 ? 'Verification service unavailable.' : `Server error (${res.status}).`));
-            clearOTP(); otpInput.focus();
-            return;
-          }
-          // Step 2: OTP passed — create Supabase account
-          try {
-            const { session } = await signUpWithEmail(pendingSignup.email, pendingSignup.password, pendingSignup.name);
-            if (session) {
-              forceClose();
-            } else {
-              // Supabase "Confirm email" is ON — user must click the link Supabase sends
-              showErr('Account created! Check your inbox for a confirmation link, then sign in.');
-              setMode('signin');
-            }
-          } catch (sbErr) {
-            showErr(authMsg(sbErr));
-          }
-        } finally { verifyBtn.disabled = false; }
-      });
-
-      document.getElementById('ani-resend').addEventListener('click', async () => {
-        if (!pendingSignup) return;
-        clearErr();
-        try {
-          const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: pendingSignup.email }) });
-          let data = {}; try { data = await res.json(); } catch (_) {}
-          if (!res.ok) throw new Error(data.error || (res.status === 404 ? 'Verification service unavailable.' : `Server error (${res.status}).`));
-          pendingSignup.token = data.token;
-          clearOTP(); otpInput.focus();
-          startResendCooldown();
-        } catch (e) { showErr(e.message); }
+        catch (e) {
+          showErr(e?.message || 'Sign-in failed. Please try again.');
+          btn.disabled = false;
+          btn.innerHTML = `<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg> Continue with GitHub`;
+        }
       });
 
       function getInitials(user) {
@@ -377,7 +186,7 @@
             </div>`;
           slot.querySelector('.ani-user-avatar').addEventListener('click', () => openProfilePanel(user));
         } else {
-          openModal(true);
+          overlay.classList.add('open', 'gated');
           if (!slot) return;
           slot.innerHTML = '';
         }
