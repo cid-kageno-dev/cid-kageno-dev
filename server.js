@@ -140,6 +140,14 @@ app.get('/api/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/Ani/'));
 });
 
+// ── Public client config (Supabase URL + anon key are safe to expose) ─────
+app.get('/api/config', (_req, res) => {
+  res.json({
+    supabaseUrl: process.env.SUPABASE_URL  || '',
+    supabaseKey: process.env.SUPABASE_ANON_KEY || '',
+  });
+});
+
 // ── GitHub repos proxy ────────────────────────────────────────────────────
 app.get('/api/github-repos', async (req, res) => {
   try {
@@ -159,8 +167,7 @@ app.get('/api/github-repos', async (req, res) => {
 // ── Chat proxy ─────────────────────────────────────────────────────────────
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message } = req.body;
-    const userName = req.session.user ? (req.session.user.name || 'Guest') : 'Guest';
+    const { message, userName = 'Guest' } = req.body;
     const r = await request(
       'https://ani-jms7.onrender.com/api/chat',
       {},
@@ -180,10 +187,10 @@ app.use(express.static(path.join(__dirname), { index: 'index.html' }));
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Serving on port ${PORT}`);
-  if (!GH_CLIENT_ID || !GH_CLIENT_SECRET) {
-    console.warn('[auth] GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET not set — login will not work');
+  if (process.env.SUPABASE_URL) {
+    console.log('[auth] Supabase configured');
   } else {
-    console.log('[auth] GitHub OAuth ready');
+    console.warn('[auth] SUPABASE_URL not set — auth will not work');
   }
 });
 

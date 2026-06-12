@@ -67,6 +67,7 @@
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="main.js"></script>
     <script type="module">
       import {
@@ -158,10 +159,23 @@
       });
 
       // ── Auth State ─────────────────────────────────────────────────────
+      let _lastUserId = null;
+
       onAuthChange((user) => {
+        window._aniUser = user;
+
         const slot = document.getElementById('ani-user-slot');
         if (user) {
           forceClose();
+
+          // Load chat history once per login (not on every state-change fire)
+          if (user.id !== _lastUserId) {
+            _lastUserId = user.id;
+            if (typeof window.loadChatHistory === 'function') {
+              window.loadChatHistory();
+            }
+          }
+
           const name      = getUserDisplayName(user);
           const avatarUrl = getUserAvatarUrl(user);
           if (!slot) return;
@@ -174,6 +188,8 @@
             </div>`;
           slot.querySelector('.ani-user-avatar').addEventListener('click', () => openProfilePanel(user));
         } else {
+          _lastUserId = null;
+          window._aniUser = null;
           overlay.classList.add('open', 'gated');
           if (!slot) return;
           slot.innerHTML = '';

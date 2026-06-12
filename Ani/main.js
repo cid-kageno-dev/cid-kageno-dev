@@ -154,44 +154,50 @@ if (viewport) {
 }
 
 /* ====================================
-   CHAT HISTORY (localStorage)
+   CHAT HISTORY (Supabase)
    ==================================== */
-const HISTORY_KEY = 'ani_chat_history';
-const MAX_HISTORY = 100; // keep last 100 messages
+let _sbClient = null;
 
-function loadHistory() {
+async function getSupabase() {
+  if (_sbClient) return _sbClient;
+  const { supabaseUrl, supabaseKey } = await fetch('/api/config').then(r => r.json());
+  _sbClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+  return _sbClient;
+}
+
+// Called by the auth module (index.html) when a user signs in
+window.loadChatHistory = async function () {
   try {
-    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-  } catch (_) {
-    return [];
+    const sb = await getSupabase();
+    const { data, error } = await sb
+      .from('chat_messages')
+      .select('role, content')
+      .order('created_at', { ascending: true })
+      .limit(100);
+
+    if (error) throw error;
+
+    // Clear existing messages
+    chatBox.querySelectorAll('.msg').forEach(el => el.remove());
+
+    if (!data || data.length === 0) {
+      addMessage("Hello. I am Ani..👋\nHow Can I Assist You Today?🤖", "bot", false);
+    } else {
+      for (const row of data) {
+        addMessage(row.content, row.role, false);
+      }
+    }
+  } catch (err) {
+    console.error('[history] load failed:', err.message);
   }
-}
+};
 
-function saveHistory(messages) {
+async function saveAniMessage(role, content) {
   try {
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(messages.slice(-MAX_HISTORY)));
-  } catch (_) {}
-}
-
-function clearHistory() {
-  localStorage.removeItem(HISTORY_KEY);
-}
-
-// In-memory copy kept in sync with localStorage
-let chatHistory = loadHistory();
-
-function recordMessage(text, type) {
-  chatHistory.push({ text, type, ts: Date.now() });
-  saveHistory(chatHistory);
-}
-
-function restoreHistory() {
-  if (chatHistory.length === 0) return;
-  // Remove the default greeting that was already added before restore
-  const existing = chatBox.querySelectorAll('.msg');
-  existing.forEach(el => el.remove());
-  for (const { text, type } of chatHistory) {
-    addMessage(text, type, /* persist */ false);
+    const sb = await getSupabase();
+    await sb.from('chat_messages').insert({ role, content });
+  } catch (err) {
+    console.error('[history] save failed:', err.message);
   }
 }
 
@@ -211,9 +217,9 @@ input.addEventListener('input', () => {
 });
 
 // --- UPDATED MESSAGE FUNCTION WITH MARKDOWN PARSER ---
-// persist=true (default) saves to localStorage; pass false when replaying history
-function addMessage(text, type, persist = true) {
-  if (persist) recordMessage(text, type);
+// save=true (default) persists to Supabase; pass false when replaying history
+function addMessage(text, type, save = true) {
+  if (save) saveAniMessage(type, text);
   const div = document.createElement("div");
   div.className = `msg ${type}`;
 
@@ -312,19 +318,13 @@ async function sendMessage() {
 
   const loader = showTyping();
 
-  let authToken = null;
-  if (typeof window.getAniIdToken === 'function') {
-    try { authToken = await window.getAniIdToken(); } catch (_) {}
-  }
-
-  const headers = { 'Content-Type': 'application/json' };
-  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  const userName = window._aniUser ? (window._aniUser.name || 'Guest') : 'Guest';
 
   try {
     const res = await fetch(URL, {
       method: "POST",
-      headers,
-      body: JSON.stringify({ message: text })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, userName })
     });
     if (!res.ok) throw new Error("API Error");
     const data = await res.json();
@@ -384,4 +384,4 @@ input.addEventListener('focus', () => {
 // Initial Calls
 checkHealth();
 setInterval(checkHealth, 15000);
-setTimeout(() => { addMessage("Hello. I am Ani..👋\nHow Can I Assist You Today?🤖", "bot"); }, 400);
+// Greeting is shown by loadChatHistory once the user is authenticated

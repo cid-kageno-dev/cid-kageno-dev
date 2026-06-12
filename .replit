@@ -42,3 +42,5 @@ publicDir = "."
 [userenv]
 
 [userenv.shared]
+SUPABASE_URL = "https://uclgpxitnhzuftqulmrn.supabase.co"
+SUPABASE_ANON_KEY = "sb_publishable_FxHFy0geZAUmZi-0yJ8AcA_-1hX4h1m"
