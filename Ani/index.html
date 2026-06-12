@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
     <title>Ani Chat</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -72,7 +73,8 @@
       import {
         signInWithGitHub, signOut, onAuthChange,
         getAccessToken, updateUserProfile,
-        getUserDisplayName, getUserAvatarUrl
+        getUserDisplayName, getUserAvatarUrl,
+        getOAuthError
       } from '/supabase-client.js';
 
       window.getAniIdToken = () => getAccessToken();
@@ -82,6 +84,14 @@
 
       function showErr(m) { errBox.textContent = m; errBox.classList.add('visible'); }
       function clearErr() { errBox.classList.remove('visible'); }
+
+      // Show any OAuth redirect error immediately (e.g. GitHub provider not enabled)
+      const oauthErr = getOAuthError();
+      if (oauthErr) {
+        showErr(oauthErr.replace(/_/g, ' '));
+        // Remove error params from URL so a refresh doesn't re-show the old error
+        history.replaceState(null, '', location.pathname);
+      }
 
       function forceClose() {
         overlay.classList.remove('open', 'gated');
