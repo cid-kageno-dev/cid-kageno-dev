@@ -7,11 +7,17 @@ const SUPABASE_ANON_KEY = 'sb_publishable_FxHFy0geZAUmZi-0yJ8AcA_-1hX4h1m';
 const _client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export async function signInWithGitHub() {
-  const { error } = await _client.auth.signInWithOAuth({
+  const { data, error } = await _client.auth.signInWithOAuth({
     provider: 'github',
-    options: { redirectTo: `${location.origin}/Ani/` }
+    options: {
+      redirectTo: `${location.origin}/Ani/`,
+      skipBrowserRedirect: true,
+    }
   });
   if (error) throw error;
+  if (data?.url) {
+    window.open(data.url, '_blank', 'noopener,noreferrer');
+  }
 }
 
 export async function signOut() {
